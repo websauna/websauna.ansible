@@ -1,0 +1,18 @@
+---
+- name: Deploy CloudFlare-only firewall rules
+  sudo: yes
+  copy: src=firewall-set-cloudflare-https.sh dest=/usr/local/bin mode=u+x
+
+- name: Deploy firewall disable
+  sudo: yes
+  copy: src=firewall-reset.sh dest=/usr/local/bin mode=u+x
+
+# - name: Enable Firewall rules
+#  sudo: yes
+#  command: /usr/local/bin/firewall-set-cloudflare-https.sh
+
+- name: Disable Firewall rules
+  sudo: yes
+  command: /usr/local/bin/firewall-reset.sh
+
+# TODO: Add firewall rules to /etc/rc.local

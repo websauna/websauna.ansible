@@ -1,0 +1,6 @@
+.vagrant
+venv
+hosts.ini
+galaxy/*
+*secrets.ini
+secrets.yml

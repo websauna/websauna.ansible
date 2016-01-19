@@ -1,0 +1,40 @@
+# Playbook which ramps up myapp tutorial site inside a Vagrant virtual machine
+
+- hosts: all
+  become: yes
+  become_user: root
+  gather_facts: true
+
+  # These need to be set up before reading default.yml - more variables are generated based on these
+  vars:
+    - package_name: myapp
+    - site_id: myapp
+    - site_mode: production
+    - mandrill: on
+    - ssl: off
+    - cloudflare: off
+    - new_relic: off
+    - notify_email: mikko@opensourcehacker.com
+    - git_repository: git@github.com:websauna/myapp.git
+
+  pre_tasks:
+    # Load default vars based on playbook.yml input
+    - include_vars: default.yml
+    # Load variables from the vault
+    - include_vars: secrets.yml
+
+  roles:
+  - websauna.preflight
+  - websauna.users
+  - websauna.ssh
+  - websauna.harden
+  - websauna.postfix
+  - websauna.mandrill
+  - ANXS.postgresql
+  - Stouts.nginx
+  - Stouts.redis
+  - Stouts.python
+  - { role: websauna.site, tags: [ 'site-update'] }
+  - { role: newrelic, tags: ['newrelic'] }
+
+

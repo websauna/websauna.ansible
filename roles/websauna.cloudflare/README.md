@@ -1,0 +1,1 @@
+Role for allowing HTTP/HTTPS from Cloudflare proxy servers only.

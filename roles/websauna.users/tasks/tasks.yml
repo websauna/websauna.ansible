@@ -1,0 +1,9 @@
+- name: Create WSGI group
+  become: yes
+  become_user: root
+  group: name=wsgi
+
+- name: Create WSGI user
+  become: yes
+  become_user: root
+  user: name=wsgi createhome=yes shell=/bin/bash comment="User owning Websauna deployment and runnign WSGI process" group={{ wsgi_group }}

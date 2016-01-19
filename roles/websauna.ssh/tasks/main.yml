@@ -1,0 +1,16 @@
+# http://stackoverflow.com/a/30789043/315168
+- name: Add ssh agent line to sudoers
+  become: yes
+  become_user: root
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: SSH_AUTH_SOCK
+    line: Defaults env_keep += "SSH_AUTH_SOCK"
+
+# http://serverfault.com/a/442099/74975
+- name: Enable SSH agent forwarding for particular list of users
+  become: yes
+  become_user: root
+  shell: setfacl -m u:{{ item }}:rw $SSH_AUTH_SOCK && setfacl -m u:{{ item }}:x $(dirname $SSH_AUTH_SOCK)
+  with_items: "{{ssh_forward_allow_users}}"

@@ -1,0 +1,124 @@
+# The following is mandatory to fill in your playbook.yml
+
+# The name of your Python package e.g. myapp
+# package_name:
+
+# SSH url to git repository e.g. git@github.com:websauna/myapp.git
+# git_repo:
+
+# E.g. myapp
+# site_id:
+
+# One of: production, staging
+# site_mode:
+
+#: Your sysadmin email address
+# notify_email:
+
+# ---------------------------------------------------
+
+# Which branch to deploy
+git_branch: master
+
+# What is the name of the unix user owning WSGI files
+# DO NOT CHANGE - the current version of Ansible does not allow variables in become_user
+wsgi_user: wsgi
+wsgi_group: wsgi
+
+
+# Where we are keeping our sensitive secrets file - default to a dummy built in file
+production_secrets_file: files/production-secrets.ini
+
+#: Where does the git checkout goes on the server
+deploy_location: "/srv/pyramid/{{ site_id }}"
+
+# Which INI file we load for uWSGI
+websauna_config_file: "{{ deploy_location }}/conf/production.ini"
+
+# Database configuration - PSQL trusts the UNIX user wsgi by default
+db_name: "{{ site_id }}_{{ site_mode }}"
+db_user: "{{ wsgi_user }}"
+db_password: "{{ wsgi_user }}"
+
+# SQLAlchemy connection URL - by default PostgreSQL does not require
+# authentication for local users
+db_sqlalchemy_url: postgresql://localhost/{{ db_name }}
+
+# Do we support SSL decoding on NGINX
+ssl: off
+ssl_certificate_key: /etc/server.ssl.key
+ssl_certificate: /etc/server.ssl.crt
+
+# Python versions to install
+python_versions: [3.5]
+python_interpreter: python3.5
+
+# Allow to debug Celery woes by enforcing log level on command line
+celery_log_level: info
+
+# Users allowed to forward SSH_AUTH_SOCK
+ssh_forward_allow_users:
+  - wsgi
+
+# ------------------------------------------------
+# Complex settings below
+# ------------------------------------------------
+
+# ----------------------------------------------------
+# Postfix
+# ----------------------------------------------------
+
+# Setup a
+postfix_domain: "{{ site_id }}-local.{{ site_id }}"
+
+# ----------------------------------------------------
+# Mandrill
+# ----------------------------------------------------
+
+# mandrill_username and mandrill_api_key go to the vault
+
+# ----------------------------------------------------
+# PostgreSQL
+# ----------------------------------------------------
+
+# Basic settings
+postgresql_version: 9.5
+postgresql_ext_install_dev_headers: yes
+postgresql_encoding: 'UTF-8'
+postgresql_locale: 'en_US.UTF-8'
+
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "trust"
+
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+
+# List of databases to be created (optional)
+postgresql_databases:
+  - name: "{{ db_name }}"
+    hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+
+# List of users to be created (optional)
+postgresql_users:
+  - name: "{{ db_user }}"
+    pass: "{{ db_password }}"
+    encrypted: no       # denotes if the password is already encrypted.
+
+# List of user privileges to be applied (optional)
+postgresql_user_privileges:
+  - name: "{{ db_user }}"                   # user name
+    db: "{{ db_name }}"                  # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
+
+access_log: /var/log/nginx/"{{ site_id }}".access.log
+error_log: /var/log/nginx/"{{ site_id }}".error.log
+
+# ----------------------------------------------------
+# New relic
+# ----------------------------------------------------
+
+new_relic: off
+# Store this in the vault
+new_relic_license_key:

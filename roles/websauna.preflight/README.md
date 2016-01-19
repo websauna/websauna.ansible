@@ -1,0 +1,1 @@
+Perform some sanity checks playbook is good to go and initialize variables.
