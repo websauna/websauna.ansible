@@ -1,0 +1,5 @@
+# Run migrations after full checkout and for virgin sites
+- name: Run Alembic migrations
+  become: yes
+  become_user: wsgi
+  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/production.ini upgrade head chdir={{ deploy_location }}"

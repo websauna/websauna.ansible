@@ -1,0 +1,13 @@
+ansible==2.0.0.2
+ecdsa==0.13
+Jinja2==2.8
+MarkupSafe==0.23
+paramiko==1.16.0
+py==1.4.31
+pycrypto==2.6.1
+pytest==2.8.7
+pytest-splinter==1.7.0
+PyYAML==3.11
+selenium==2.49.2
+splinter==0.7.3
+wheel==0.24.0

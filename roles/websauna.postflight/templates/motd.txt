@@ -1,0 +1,47 @@
+This server has been automatically set up by websauna.ansible playbook
+
+Sysadmin email:       {{ notify_email }}
+Nginx public IP:      {{ public_ip }}
+
+WSGI application log: {{ deploy_location }}/logs/websauna.log
+uWSGI stdout log:     {{ deploy_location }}/logs/uwsgi.log
+Celery beat log:      {{ deploy_location }}/logs/celery-beat.log
+Celery worker log:    {{ deploy_location }}/logs/celery-worker.log
+Nginx access log:     {{ access_log }}
+Nginx error log:      {{ error_log }}
+PostgreSQL log:       /var/log/postgresql/postgresql-9.5-main.log
+Redis log:            /var/log/redis/redis-server.log
+
+Service statuses::
+
+    sudo -i
+    supervisorctl status
+    service nginx status && service redis-server status && service postgresql status && service postfix status
+
+Enter Python shell:
+
+    sudo -i -u wsgi
+    ws-shell conf/production.ini
+
+Enter database shell:
+
+    sudo -i -u wsgi
+    ws-db-shell conf/production.ini
+
+Restart web:
+
+    sudo -i
+    service nginx restart && supervisorctl restart uwsgi
+
+Restart Celery tasks:
+
+    sudo -i
+    supervisorctl restart celery-worker && supervisorctl restart celery-beat
+
+Restart databases:
+
+    sudo -i
+    service redis restart && service postgresql restart
+
+For more information see https://websauna.org
+

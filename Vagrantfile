@@ -5,10 +5,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "trusty64"
     config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
-    config.vm.network :public_network
+    # TODO: how to port bridge to Travis?
+    config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)"
     config.ssh.forward_agent = true
 
-    # compiling GCC needs more memory
+    # Expose HTTP to the world for testing
+    config.vm.network "forwarded_port", guest: 80, host: 1080
+
+    # Compiling Python extensions with GCC needs more memory
     config.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--memory", "1024"]
       v.customize ["modifyvm", :id, "--cpus", 2]

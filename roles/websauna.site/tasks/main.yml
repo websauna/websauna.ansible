@@ -1,3 +1,4 @@
+---
 - name: Install dependencies
   become: yes
   become_user: root
@@ -28,6 +29,17 @@
   become: yes
   become_user: root
   file: path={{ deploy_location }} state=directory group=wsgi owner=wsgi mode="u=rwx,g=,o="
+
+# Check if we have an already running site
+- name: Check previous project checkouts
+  stat: path={{ deploy_location }}/.git
+  register: previous_checkout
+
+# Full checkout would break existing running application because loading .py files
+# with models for which database tables do not exist
+- name: "Run database migrations prior code update"
+  include: premigrations.yml
+  when: previous_checkout.stat.exists == True
 
 - name: Deploy Websauna application from a Git repository
   become: yes
@@ -66,6 +78,11 @@
   become_user: wsgi
   pip: requirements={{deploy_location}}/requirements.txt virtualenv={{deploy_location}}/venv
 
+- name: Install uWSGI
+  become: yes
+  become_user: wsgi
+  pip: name=uwsgi version={{ uwsgi_version }} virtualenv={{deploy_location}}/venv
+
 - name: Install Websauna application Python package
   become: yes
   become_user: wsgi
@@ -86,15 +103,34 @@
   become_user: wsgi
   file: path={{ deploy_location }}/logs state=directory
 
+# Now run un-run migrations unconditionally regardless if we
+# are a prisitine or already running site
+- name: Run migrations after codebase update and for pristine sites
+  include: postmigrations.yml
+
+# If migrations somehow still fail now it's good time to start screaming
+- name: Perform database sanity check
+  become: yes
+  become_user: wsgi
+  command: "{{ deploy_location }}/venv/bin/ws-sanity-check conf/production.ini chdir={{ deploy_location }}"
+
+- name: Collect static files
+  become: yes
+  become_user: wsgi
+  command: "{{ deploy_location }}/venv/bin/ws-collect-static conf/production.ini chdir={{ deploy_location }}"
+
+- name: Deploy SSL certificates
+  include: certificates.yml
+
 - name: Deploy uWSGI config
   become: yes
   become_user: wsgi
-  template: src=uwsgi.ini dest={{ deploy_location }}/uwsgi.ini
+  template: src=uwsgi.ini dest={{ deploy_location }}/conf/uwsgi.ini
 
 - name: Deploy WSGI hander
   become: yes
   become_user: wsgi
-  template: src=pyramid.wsgi dest={{ deploy_location }}/pyramid.wsgi
+  template: src=pyramid.wsgi dest={{ deploy_location }}/conf/pyramid.wsgi
 
 - name: Deploy supervisor config
   become: yes
@@ -108,7 +144,9 @@
   notify:
     - nginx restart
 
-- name: Start UWSGI
+# TODO: Graceful uWSGI loading
+# https://uwsgi-docs.readthedocs.org/en/latest/articles/TheArtOfGracefulReloading.html#standard-default-boring-graceful-reload-aka-sighup
+- name: Start uWSGI
   become: yes
   become_user: root
   supervisorctl: name=uwsgi state=restarted

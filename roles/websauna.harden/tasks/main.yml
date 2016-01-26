@@ -1,5 +1,5 @@
 # http://ryaneschinger.com/blog/securing-a-server-with-ansible/
-- name: Install securing server software
+- name: Install hardening application packages
   become: yes
   become_user: root
   apt: name={{ item }} state=installed update_cache=yes

@@ -5,7 +5,7 @@ Deploy Websauna website with Ansible.
 Introduction
 ============
 
-This is an Ansible playbook for automatically deploying a single server Websauna website from a git repository for Ubuntu 14.04 Linux. It allows you to do deploy your Websauna application to a fresh server, where you just received SSH credentials, within 30 minutes.
+This is an Ansible playbook for automatically deploying a single server Websauna website from a git repository for Ubuntu 14.04 Linux. It allows you to do deploy your Websauna application to a fresh server, where you just received SSH credentials, within 30 minutes. Alternatively you can gracefully upgrade any existing running site.
 
 Automatic installation sets up
 
@@ -32,6 +32,8 @@ Furthermore
 * Firewall is set up to allow only inbound SSH, HTTP, HTTPS
 
 * The application is deployed in the folder ``/srv/pyramid/yoursitename`` per Filesystem Hierarchy Standard
+
+* Safely run migrations: Run database migrations first and then update codebase with compatible model files to avoid breaking an existing running site
 
 Requirements
 ============
@@ -212,4 +214,34 @@ Test shell::
 
 This will usually show import errors.
 
+Test local ewb server::
 
+    ws-pserve conf/production.ini
+
+This will usually show if your database is not in migrated state or PostgreSQL or Redis is not running properly.
+
+Advanced
+========
+
+Privilege separation
+--------------------
+
+Nginx runs under UNIX user ``www-data``.
+
+uWSGI, Celery runs under user ``wsgi``.
+
+PostgreSQL runs under user ``postgres``.
+
+Redis runs under user ``redis``.
+
+Postfix runs under user ``postfix``.
+
+``/srv/pyramid/myapp`` is writable and readable by ``wsgi`` only.
+
+
+License
+=======
+
+This ansible playbook is licensed under MIT license.
+
+Test suite is licensed under GPL as per original author Plone foundation.

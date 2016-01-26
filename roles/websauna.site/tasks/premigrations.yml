@@ -1,0 +1,22 @@
+---
+# Run any migrations before performing full git pull and checkout.
+# Full checkout would break existing running application because loading .py files
+# with models for which database tables do not exist.
+
+# TODO: Make this configurable, smarter.
+# Only do backup when migrations have changed.
+- name: Backup SQL database before migrations
+  become: yes
+  become_user: wsgi
+  shell: "{{deploy_location}}/venv/bin/ws-dump-db conf/production.ini > /home/wsgi/site.sql  chdir={{ deploy_location }}"
+
+- name: Fetch latest Alembic scripts from Git remote master for migrations
+  become: yes
+  become_user: wsgi
+  debug: msg="test"
+
+# Automatically run site migration scripts if any unrun scripts
+- name: Run Alembic migrations
+  become: yes
+  become_user: wsgi
+  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/production.ini upgrade head chdir={{ deploy_location }}"

@@ -14,7 +14,7 @@
   tags: postfix
 
 - name: configure postfix's relayhost in /etc/postfix/main.cf
-  lineinfile: dest=/etc/postfix/main.cf regexp='mandrillapp' line='relayhost = [smtp.mandrillapp.com]'
+  lineinfile: dest=/etc/postfix/main.cf regexp='^relayhost = ' line='relayhost = [smtp.mandrillapp.com]:587'
   notify:
     - restart postfix
     - send test email

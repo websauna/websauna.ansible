@@ -6,7 +6,7 @@
 # SSH url to git repository e.g. git@github.com:websauna/myapp.git
 # git_repo:
 
-# E.g. myapp
+# E.g. myapp_prod
 # site_id:
 
 # One of: production, staging
@@ -30,7 +30,7 @@ wsgi_group: wsgi
 production_secrets_file: files/production-secrets.ini
 
 #: Where does the git checkout goes on the server
-deploy_location: "/srv/pyramid/{{ site_id }}"
+deploy_location: "/srv/pyramid/{{ package_name }}"
 
 # Which INI file we load for uWSGI
 websauna_config_file: "{{ deploy_location }}/conf/production.ini"
@@ -69,13 +69,35 @@ ssh_forward_allow_users:
 # ----------------------------------------------------
 
 # Setup a
-postfix_domain: "{{ site_id }}-local.{{ site_id }}"
+postfix_domain: "{{ package_name }}-local.{{ site_id }}"
+
+postfix_notify_email: "{{ notify_email }}"
 
 # ----------------------------------------------------
 # Mandrill
 # ----------------------------------------------------
 
 # mandrill_username and mandrill_api_key go to the vault
+
+# ----------------------------------------------------
+# uWSGI
+# ----------------------------------------------------
+
+# uWSGI version to install
+uwsgi_version: 2.0.12
+
+# ----------------------------------------------------
+# nginx
+# ----------------------------------------------------
+
+# Default self-signed certificates on local environment to copy over
+local_certificate_file:
+local_key_file:
+
+
+# Server-side path to certificate files for Nginx
+ssl_certificate: /etc/nginx/certificate.pem
+ssl_certificate_key: /etc/nginx/key.pem
 
 # ----------------------------------------------------
 # PostgreSQL
