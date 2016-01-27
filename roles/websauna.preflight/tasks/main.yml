@@ -3,3 +3,34 @@
   fail:
     msg: "We have only tested with Ansible version 1.2+. Please update Ansible"
   when: ansible_product_version < '1.2'
+  tags: site-update
+
+- name: Fail if deploy_location not set
+  fail:
+   msg: Looks like deploy_location variable is not set. Have you configured your playbook properly?
+  when: deploy_location is not defined
+  tags: site-update
+
+- name: Fail if SSH agent forward is not in use
+  fail:
+   msg: The Ansible server connection did not have SSH agent forwarding enabled.
+  when: "'SSH_AUTH_SOCK' not in ansible_env"
+  tags: site-update
+
+- name: Fail if site mode is not set or is something we don't feel confident about
+  fail:
+   msg: The Ansible server connection did not have SSH agent forwarding enabled.
+  when: "site_mode not in ['production', 'staging']"
+  tags: site-update
+
+- name: Check for local production-settings.ini
+  local_action: stat path={{ ini_secrets_file }}
+  register: ini_secrets_file_stat
+  tags: site-update
+
+- name: Fail if we cannot find the INI secrets file
+  fail:
+   msg: Please fill in ini_secrets_file setting - file not found
+  when: ini_secrets_file_stat.stat.exists == false
+  tags: site-update
+

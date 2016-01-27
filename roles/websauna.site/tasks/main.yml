@@ -35,11 +35,30 @@
   stat: path={{ deploy_location }}/.git
   register: previous_checkout
 
+- name: Check we have correct Websauna install
+  stat: path={{deploy_location}}/venv/bin/ws-dump-db
+  register: previous_websauna
+
+- name: Create logs folder
+  become: yes
+  become_user: wsgi
+  file: path={{ deploy_location }}/logs state=directory
+
+- name: Deploy INI config
+  become: yes
+  become_user: wsgi
+  template: src=production.ini dest={{ deploy_location }}/conf/{{ site_mode }}.ini
+
+- name: Deploy site secrets
+  become: yes
+  become_user: wsgi
+  template: src={{ ini_secrets_file }} dest={{ deploy_location }}/conf/{{ site_mode }}-secrets.ini
+
 # Full checkout would break existing running application because loading .py files
 # with models for which database tables do not exist
 - name: "Run database migrations prior code update"
   include: premigrations.yml
-  when: previous_checkout.stat.exists == True
+  when: previous_checkout.stat.exists == True and previous_websauna.stat.exists == True
 
 - name: Deploy Websauna application from a Git repository
   become: yes
@@ -88,21 +107,6 @@
   become_user: wsgi
   shell: cd {{deploy_location}} && ./venv/bin/python setup.py develop
 
-- name: Deploy site config
-  become: yes
-  become_user: wsgi
-  template: src=production.ini dest={{ deploy_location }}/conf/production.ini
-
-- name: Deploy site secrets
-  become: yes
-  become_user: wsgi
-  template: src={{ production_secrets_file }} dest={{ deploy_location }}/conf/production-secrets.ini
-
-- name: Create logs folder
-  become: yes
-  become_user: wsgi
-  file: path={{ deploy_location }}/logs state=directory
-
 # Now run un-run migrations unconditionally regardless if we
 # are a prisitine or already running site
 - name: Run migrations after codebase update and for pristine sites
@@ -121,6 +125,10 @@
 
 - name: Deploy SSL certificates
   include: certificates.yml
+
+- name: Protect website with htpasswd
+  htpasswd: path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640
+  when: htpasswd_password
 
 - name: Deploy uWSGI config
   become: yes

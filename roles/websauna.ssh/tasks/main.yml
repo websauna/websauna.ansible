@@ -16,9 +16,43 @@
     regexp: SSH_AUTH_SOCK
     line: Defaults env_keep += "SSH_AUTH_SOCK"
 
+# SSH_AUTH_SOCK access rights must be re-updated for every playbook run
 # http://serverfault.com/a/442099/74975
-- name: Enable SSH agent forwarding for particular list of users
+- name: Enable SSH agent forwarding for wsgi user
   become: yes
   become_user: root
-  shell: setfacl -m u:{{ item }}:rw $SSH_AUTH_SOCK && setfacl -m u:{{ item }}:x $(dirname $SSH_AUTH_SOCK)
-  with_items: "{{ssh_forward_allow_users}}"
+  shell: setfacl -m u:wsgi:rw $SSH_AUTH_SOCK && setfacl -m u:wsgi:x $(dirname $SSH_AUTH_SOCK)
+  tags: site-update
+
+- name: Make sure we actually got the access SSH_AUTH_SOCK access rights. If this fails it means SSH is reconnecting and ControlPersist option is missing.
+  become: yes
+  become_user: wsgi
+  shell: ls $SSH_AUTH_SOCK
+  tags: site-update
+
+- name: Accept common SSH keys like github.com and bitbucket.org
+  become: yes
+  become_user: wsgi
+  shell: ls $SSH_AUTH_SOCK
+
+# TODO: Replace these with https://github.com/bfmartin/ansible-sshknownhosts
+- name: ensure github.com is a known host
+  become: yes
+  become: wsgi
+  lineinfile:
+    dest: /home/wsgi/.ssh/known_hosts
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+
+- name: ensure bitbucket.org is a known host
+  become: yes
+  become: wsgi
+  lineinfile:
+    dest: /home/wsgi/.ssh/known_hosts
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
+    regexp: "^bitbucket"
+

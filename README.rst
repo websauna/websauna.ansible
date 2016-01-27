@@ -35,76 +35,7 @@ Furthermore
 
 * Safely run migrations: Run database migrations first and then update codebase with compatible model files to avoid breaking an existing running site
 
-Requirements
-============
-
-Running Ansible should be possible on Windows, Linux and OSX.
-
-Basic command line usage is required.
-
-Installation
-============
-
-Git clone the repository from Github::
-
-    git co git@github.com:websauna/websauna.git
-
-Create a virtual environment for Ansible. This must be separate from any other virtual environment you are working with::
-
-    virtualenv -p python2.7 venv
-    source venv/bin/activate
-    pip install ansible
-
-.. note ::
-
-    Ansible runs on Python 2.x for now. Ansible is a Red Hat product. Red Hat is commited to support Python 2.4 for their enterprise users. As long as Python 2.4 is supported, it is impossible to upgrade Ansible to support Python 3.x.
-
-Install packaged roles we are going to use::
-
-    ansible-galaxy install --roles-path=galaxy \
-        ANXS.postgresql \
-        Stouts.foundation \
-        Stouts.nginx \
-        Stouts.redis \
-        Stouts.python
-
-
-Create a vault with password. Vault is the secrets file where non-public configuration variables will be stored. To aovid retyping the password every time, the default password storing location is in ``~/websauna-ansible-vault.txt`` configured in ``ansible.cfg``::
-
-    read -s pass | echo $pass > ~/websauna-ansible-vault.txt
-
-    ansible-vault create secrets.yml
-
-This will open your text editor and let you edit the unecrypted vault. For now you can leave it empty and just save the empty file.
-
-Usage
-=====
-
-SSH agent forwarding
---------------------
-
-You need to `enable SSH agent forwarding <https://opensourcehacker.com/2012/10/24/ssh-key-and-passwordless-login-basics-for-developers/>`_, so that Ansible uses your locally configured SSH key.
-
-Usually the command is along the lines::
-
-    ssh-add ~/.ssh/my_ssh_private_key_for_deployment
-
-Likewise, `you need to have set up your public key on your Git repository service like Github <https://help.github.com/articles/generating-ssh-keys/>`_.
-
-Frozen requirements
--------------------
-
-You need to have ``requirements.txt`` file in your application root folder telling the exact version of package dependencies of your application.
-
-Use ``pip freeze`` command to generate this.
-
-    pip freeze > requirements.txt
-
-After this you may need to hand edit ``requirements.txt``
-
-Do not list your own package, like ``myapp`` in ``requirements.txt`` as it is handled specially.
-
-If your ``pip freeze`` gives you dependency problems (incompatible packages) you can always get the latest Websauna compatible packages list from `continous integration service <https://travis-ci.org/websauna/websauna>`_ build log. Pick any successful build and ``pip freeze`` output is the very last line of build log.
+`See documentation <https://websauna.org/narrative/deployment/index.html>`_.
 
 production.ini
 --------------
@@ -152,27 +83,6 @@ And to update a running VM::
 
     vagrant provision
 
-Setting up email
-================
-
-Sign up to `mandrill.com <https://mandrill.com>`_. You get up to 12 000 monthly emails for free for reputable SMTP servers.
-
-Add Mandrill credentils to your vault::
-
-    ansible-vault edit secrets.yml
-
-Add::
-
-    mandrill_username: mikko@example.com
-    mandrill_api_key: 51X5G2MFJMWKOXXXXXX
-
-Enable ``mandrill`` in ``vars`` of your playbook::
-
-  vars:
-    - mandrill: on
-
-
-`More information about Postfix and Mandrill <http://opensourcehacker.com/2013/03/26/using-postfix-and-free-mandrill-email-service-for-smtp-on-ubuntu-linux-server/>`_.
 
 Log files
 =========
@@ -189,54 +99,6 @@ Python log::
 Celery log::
 
     /srv/pyramid/myapp/logs/celery.log
-
-Troubleshooting
-===============
-
-Manually SSH'ing in the box and checking why website doesn't start up
----------------------------------------------------------------------
-
-SSH in to your server. If you are using Vagrant local testing you can do::
-
-    vagrant ssh
-
-Change to ``wsgi`` user::
-
-    sudo -i -u wsgi
-
-It should go directly the deployment folder, virtual environment activated::
-
-    (venv)wsgi@vagrant-ubuntu-trusty-64:/srv/pyramid/myapp$
-
-Test shell::
-
-    ws-shell conf/production.ini
-
-This will usually show import errors.
-
-Test local ewb server::
-
-    ws-pserve conf/production.ini
-
-This will usually show if your database is not in migrated state or PostgreSQL or Redis is not running properly.
-
-Advanced
-========
-
-Privilege separation
---------------------
-
-Nginx runs under UNIX user ``www-data``.
-
-uWSGI, Celery runs under user ``wsgi``.
-
-PostgreSQL runs under user ``postgres``.
-
-Redis runs under user ``redis``.
-
-Postfix runs under user ``postfix``.
-
-``/srv/pyramid/myapp`` is writable and readable by ``wsgi`` only.
 
 
 License
