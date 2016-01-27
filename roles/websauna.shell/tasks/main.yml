@@ -1,0 +1,10 @@
+- name: Enable Bash colors for all users
+  lineinfile:
+    line: "force_color_prompt=yes"
+    regexp: "^force_color_prompt"
+    dest: "/etc/bash.bashrc"
+    create: yes
+    state: present
+  become: yes
+  become_user: root
+

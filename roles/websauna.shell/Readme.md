@@ -1,0 +1,1 @@
+Make sure the remote server has sane shell defaults.

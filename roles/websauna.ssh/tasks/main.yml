@@ -56,3 +56,17 @@
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
     regexp: "^bitbucket\\.org"
 
+- name: Check if we are Amazon EC2 Ubuntu setup
+  stat: path=/home/ubuntu
+  register: home_ubuntu
+
+- name: Make sure we give rights to SSH_AUTH_SOCK on wsgi user on normal SSH login
+  become: yes
+  become_user: ubuntu
+  lineinfile:
+    line: "sudo setfacl -m u:wsgi:rw $SSH_AUTH_SOCK && sudo setfacl -m u:wsgi:x $(dirname $SSH_AUTH_SOCK)"
+    regexp: "sudo setfacl"
+    dest: "/home/ubuntu/.bashrc"
+    create: yes
+    state: present
+  when: home_ubuntu.stat.exists == True
