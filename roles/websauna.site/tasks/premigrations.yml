@@ -8,15 +8,16 @@
 - name: Backup SQL database before migrations
   become: yes
   become_user: wsgi
-  shell: "{{deploy_location}}/venv/bin/ws-dump-db conf/production.ini > /home/wsgi/site.sql  chdir={{ deploy_location }}"
+  shell: "{{deploy_location}}/venv/bin/ws-dump-db conf/{{ site_mode }}.ini > /home/wsgi/site.sql  chdir={{ deploy_location }}"
 
+# TODO
 - name: Fetch latest Alembic scripts from Git remote master for migrations
   become: yes
   become_user: wsgi
-  debug: msg="test"
+  shell: cd {{ deploy_location }} && git fetch && git checkout origin -- alembic
 
 # Automatically run site migration scripts if any unrun scripts
 - name: Run Alembic migrations
   become: yes
   become_user: wsgi
-  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/production.ini upgrade head chdir={{ deploy_location }}"
+  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/{{ site_mode }}.ini upgrade head chdir={{ deploy_location }}"

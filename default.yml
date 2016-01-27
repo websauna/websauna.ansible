@@ -15,6 +15,11 @@
 #: Your sysadmin email address
 # notify_email:
 
+# ssl: off
+# mandrill: off
+# cloudflare: off
+# new_relic: off
+
 # ---------------------------------------------------
 
 # Which branch to deploy
@@ -33,7 +38,7 @@ production_secrets_file: files/production-secrets.ini
 deploy_location: "/srv/pyramid/{{ package_name }}"
 
 # Which INI file we load for uWSGI
-websauna_config_file: "{{ deploy_location }}/conf/production.ini"
+websauna_config_file: "{{ deploy_location }}/conf/{{ site_mode }}.ini"
 
 # Database configuration - PSQL trusts the UNIX user wsgi by default
 db_name: "{{ site_id }}_{{ site_mode }}"
@@ -42,10 +47,10 @@ db_password: "{{ wsgi_user }}"
 
 # SQLAlchemy connection URL - by default PostgreSQL does not require
 # authentication for local users
-db_sqlalchemy_url: postgresql://localhost/{{ db_name }}
+db_sqlalchemy_url: "postgresql://localhost/{{ db_name }}"
 
 # Do we support SSL decoding on NGINX
-ssl: off
+# ssl: off
 ssl_certificate_key: /etc/server.ssl.key
 ssl_certificate: /etc/server.ssl.crt
 
@@ -55,10 +60,6 @@ python_interpreter: python3.5
 
 # Allow to debug Celery woes by enforcing log level on command line
 celery_log_level: info
-
-# Users allowed to forward SSH_AUTH_SOCK
-ssh_forward_allow_users:
-  - wsgi
 
 # ------------------------------------------------
 # Complex settings below
@@ -143,6 +144,5 @@ error_log: /var/log/nginx/"{{ site_id }}".error.log
 # New relic
 # ----------------------------------------------------
 
-new_relic: off
 # Store this in the vault
 new_relic_license_key:

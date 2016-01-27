@@ -74,7 +74,7 @@
 - name: Upgrade virtualenv to bugfixed versions
   become: yes
   become_user: root
-  shell: sudo pip install -U virtualenv
+  shell: pip install -U virtualenv
 
 - name: Create virtualenv for app using chosen Python
   when: has_virtualenv.stat.exists == False
@@ -116,29 +116,29 @@
 - name: Perform database sanity check
   become: yes
   become_user: wsgi
-  command: "{{ deploy_location }}/venv/bin/ws-sanity-check conf/production.ini chdir={{ deploy_location }}"
+  command: "{{ deploy_location }}/venv/bin/ws-sanity-check conf/{{ site_mode }}.ini chdir={{ deploy_location }}"
 
 - name: Collect static files
   become: yes
   become_user: wsgi
-  command: "{{ deploy_location }}/venv/bin/ws-collect-static conf/production.ini chdir={{ deploy_location }}"
+  command: "{{ deploy_location }}/venv/bin/ws-collect-static conf/{{ site_mode }}.ini chdir={{ deploy_location }}"
 
 - name: Deploy SSL certificates
   include: certificates.yml
 
 - name: Protect website with htpasswd
-  htpasswd: path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640
-  when: htpasswd_password
+  htpasswd: "path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640"
+  when: htpasswd_password is defined
 
 - name: Deploy uWSGI config
   become: yes
   become_user: wsgi
-  template: src=uwsgi.ini dest={{ deploy_location }}/conf/uwsgi.ini
+  template: "src=uwsgi.ini dest={{ deploy_location }}/conf/uwsgi.ini"
 
 - name: Deploy WSGI hander
   become: yes
   become_user: wsgi
-  template: src=pyramid.wsgi dest={{ deploy_location }}/conf/pyramid.wsgi
+  template: "src=pyramid.wsgi dest={{ deploy_location }}/conf/pyramid.wsgi"
 
 - name: Deploy supervisor config
   become: yes
