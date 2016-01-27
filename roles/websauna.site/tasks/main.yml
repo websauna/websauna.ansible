@@ -105,7 +105,7 @@
 - name: Install Websauna application Python package
   become: yes
   become_user: wsgi
-  shell: cd {{deploy_location}} && ./venv/bin/python setup.py develop
+  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
 
 # Now run un-run migrations unconditionally regardless if we
 # are a prisitine or already running site
