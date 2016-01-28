@@ -145,4 +145,16 @@ error_log: /var/log/nginx/"{{ site_id }}".error.log
 # ----------------------------------------------------
 
 # Store this in the vault
-new_relic_license_key:
+# new_relic_license_key:
+
+
+# ----------------------------------------------------
+# Log watch
+# ----------------------------------------------------
+
+logwatch_email: "{{ notify_email }}"  # Email Address which Logwatch reports to
+logwatch_detail: "low"            # The level of detail in the Logwatch report
+logwatch_range: "yesterday"       # The default time range for the Logwatch report
+logwatch_output: "stdout"         # The output method of the Logwatch report
+logwatch_format: "text"           # The format of the Logwatch report
+logwatch_cron_time: "daily"       # Cron special time specification nickname - must match with logwatch range!
