@@ -29,6 +29,30 @@
   shell: creates=~/.forward chdir=~ echo "{{ notify_email }}" > .forward
   tags: postfix
 
+- name: Forward cron email
+  tags: postfix
+  become: yes
+  become_user: root
+  lineinfile:
+    line: "MAILTO={{ notify_email }}"
+    insertafter: "^PATH"
+    regexp: "^MAILTO"
+    dest: "/etc/crontab"
+    create: yes
+    state: present
+
+#
+- name: Alias root email
+  tags: postfix
+  become: yes
+  become_user: root
+  lineinfile:
+    line: "root: {{ notify_email }}"
+    regexp: "^root"
+    dest: "/etc/aliases"
+    create: yes
+    state: present
+
 - name: Copy disk-usage-alert script to /etc/cron.hourly (emails when disk full)
   template: src=disk-usage-alert.sh dest=/etc/cron.hourly/disk-usage-alert owner=root group=root mode=755
   tags: postfix
