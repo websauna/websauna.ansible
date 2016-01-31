@@ -137,8 +137,8 @@ postgresql_user_privileges:
     priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
     role_attr_flags: "CREATEDB" # role attribute flags
 
-access_log: /var/log/nginx/"{{ site_id }}".access.log
-error_log: /var/log/nginx/"{{ site_id }}".error.log
+access_log: "/var/log/nginx/{{ site_id }}.access.log"
+error_log: "/var/log/nginx/{{ site_id }}.error.log"
 
 # ----------------------------------------------------
 # New relic

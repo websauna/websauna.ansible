@@ -1,0 +1,1 @@
+Core role of Websauna site which sets up Nginx, uWSGI and Celery.
