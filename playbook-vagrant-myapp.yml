@@ -17,10 +17,18 @@
     - websocket: on
     - notify_email: mikko@example.com
     - git_repository: git@github.com:websauna/myapp.git
+    - git_branch: master
     - certificate_file: tests/snakeoil.pem
     - key_file: tests/snakeoil.pem
     - ini_secrets_file: tests/test-secrets.ini
     - www_ip: 0.0.0.0
+
+    # This is were we forward Websocket
+    - ini_extra_settings: |
+        pyramid_notebook.alternative_domain = http://localhost:1080
+
+        websauna.superusers =
+          mikko@example.com
 
   pre_tasks:
 

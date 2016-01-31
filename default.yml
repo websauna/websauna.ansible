@@ -22,14 +22,15 @@
 
 # ---------------------------------------------------
 
-# Which branch to deploy
-git_branch: master
+config_description: Default generated variable values. These settings are generated from required settings. If you wish to override any of the value please use ``include_vars`` Ansible comment after ``default.yml`` is included in your playbook.
 
-# What is the name of the unix user owning WSGI files
+
+# What is the name of the unix user owning /srv/pyramid/myapp files
 # DO NOT CHANGE - the current version of Ansible does not allow variables in become_user
 wsgi_user: wsgi
-wsgi_group: wsgi
 
+# What is the name of the unix group owning /srv/pyramid/myapp files
+wsgi_group: wsgi
 
 # Where we are keeping our sensitive secrets file - default to a dummy built in file
 production_secrets_file: files/production-secrets.ini
@@ -152,9 +153,27 @@ error_log: "/var/log/nginx/{{ site_id }}.error.log"
 # Log watch
 # ----------------------------------------------------
 
-logwatch_email: "{{ notify_email }}"  # Email Address which Logwatch reports to
-logwatch_detail: "low"            # The level of detail in the Logwatch report
-logwatch_range: "yesterday"       # The default time range for the Logwatch report
-logwatch_output: "stdout"         # The output method of the Logwatch report
-logwatch_format: "text"           # The format of the Logwatch report
-logwatch_cron_time: "daily"       # Cron special time specification nickname - must match with logwatch range!
+# Email Address which Logwatch reports to
+logwatch_email: "{{ notify_email }}"
+
+# The level of detail in the Logwatch report
+logwatch_detail: "low"
+
+# The default time range for the Logwatch report
+logwatch_range: "yesterday"
+
+# The output method of the Logwatch report
+logwatch_output: "stdout"
+
+# The format of the Logwatch report
+logwatch_format: "text"
+
+# Cron special time specification nickname - must match with logwatch range!
+logwatch_cron_time: "daily"
+
+# ----------------------------------------------------
+# IPython Notebook
+# ----------------------------------------------------
+
+# Where created .ipynb files and IPython Notebook startup and error logs are stored
+pyramid_notebook_notebook_folder: "{{ deploy_location}}/notebooks"

@@ -55,6 +55,11 @@
   become_user: wsgi
   file: path={{ deploy_location }}/logs state=directory
 
+- name: Create notebooks folder
+  become: yes
+  become_user: wsgi
+  file: path={{ pyramid_notebook_notebook_folder }} state=directory
+
 - name: Deploy INI config
   become: yes
   become_user: wsgi
@@ -145,7 +150,7 @@
   become_user: root
   template: src=supervisor.conf dest=/etc/supervisor/conf.d/site.conf
 
-- name: Deploy Nginx
+- name: Deploy Nginx configuration
   become: yes
   become_user: root
   template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
@@ -159,15 +164,15 @@
   become_user: root
   supervisorctl: name=uwsgi state=restarted
 
-- name: Start celeryworker
+- name: Start Celery worker process
   become: yes
   become_user: root
-  supervisorctl: name=celeryworker state=restarted
+  supervisorctl: name=celery-worker state=restarted
 
-- name: Start celerybeat
+- name: Start Celery beat process
   become: yes
   become_user: root
-  supervisorctl: name=celerybeat state=restarted
+  supervisorctl: name=celery-beat state=restarted
 
 
 

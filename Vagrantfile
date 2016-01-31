@@ -12,14 +12,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Expose HTTP to the world for testing
     config.vm.network "forwarded_port", guest: 80, host: 1080
 
-    # Websocket forwarding for IPython Notebook
-    config.vm.network "forwarded_port", guest: 40000, host: 40000
-    config.vm.network "forwarded_port", guest: 40001, host: 40001
-    config.vm.network "forwarded_port", guest: 40002, host: 40002
-    config.vm.network "forwarded_port", guest: 40003, host: 40003
-    config.vm.network "forwarded_port", guest: 40004, host: 40004
-    config.vm.network "forwarded_port", guest: 40005, host: 40005
-
     # Compiling Python extensions with GCC needs more memory
     config.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--memory", "1024"]

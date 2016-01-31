@@ -1,0 +1,15 @@
+---
+# Documentation for optional Playbook variables
+
+
+config_description: Variables defined in this playbook are optional. If you do not fill them Playbook doesn't take any action or generate anything.
+
+# Extra settings placed in ``[app:main]`` section in generated production.ini.
+# Example:
+#
+# extra_ini_settings: |
+#     mail.host = mymailserver.internal
+#     websauna.superusers =
+#         mikko@example.com
+#
+ini_extra_settings:

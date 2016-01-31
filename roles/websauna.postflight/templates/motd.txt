@@ -37,17 +37,18 @@ Restart databases:
 Setup info
 ----------
 
-Sysadmin email:       {{ notify_email }}
-Nginx listing IP:     {{ www_ip }}
+Sysadmin email:         {{ notify_email }}
+Nginx listing IP:       {{ www_ip }}
 
-WSGI application log: {{ deploy_location }}/logs/websauna.log
-uWSGI stdout log:     {{ deploy_location }}/logs/uwsgi.log
-Celery beat log:      {{ deploy_location }}/logs/celery-beat.log
-Celery worker log:    {{ deploy_location }}/logs/celery-worker.log
-Nginx access log:     {{ access_log }}
-Nginx error log:      {{ error_log }}
-PostgreSQL log:       /var/log/postgresql/postgresql-9.5-main.log
-Redis log:            /var/log/redis/redis-server.log
+WSGI application log:   {{ deploy_location }}/logs/websauna.log
+uWSGI stdout log:       {{ deploy_location }}/logs/uwsgi.log
+Celery beat log:        {{ deploy_location }}/logs/celery-beat.log
+Celery worker log:      {{ deploy_location }}/logs/celery-worker.log
+Nginx access log:       {{ access_log }}
+Nginx error log:        {{ error_log }}
+PostgreSQL log:         /var/log/postgresql/postgresql-9.5-main.log
+Redis log:              /var/log/redis/redis-server.log
+IPython notebooks:      {{ pyramid_notebook_notebook_folder }}
 
 For more information see https://websauna.org
 
