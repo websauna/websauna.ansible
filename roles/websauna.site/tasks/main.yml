@@ -39,6 +39,17 @@
   stat: path={{deploy_location}}/venv/bin/ws-dump-db
   register: previous_websauna
 
+# Full checkout would break existing running application because loading .py files
+# with models for which database tables do not exist
+- name: "Run database migrations prior code update"
+  include: premigrations.yml
+  when: previous_checkout.stat.exists == True and previous_websauna.stat.exists == True
+
+- name: Deploy Websauna application from a Git repository
+  become: yes
+  become_user: wsgi
+  git: repo={{ git_repository }} dest={{deploy_location}} accept_hostkey=yes force=yes track_submodules=yes recursive=yes version={{ git_branch }}
+
 - name: Create logs folder
   become: yes
   become_user: wsgi
@@ -53,17 +64,6 @@
   become: yes
   become_user: wsgi
   template: src={{ ini_secrets_file }} dest={{ deploy_location }}/conf/{{ site_mode }}-secrets.ini
-
-# Full checkout would break existing running application because loading .py files
-# with models for which database tables do not exist
-- name: "Run database migrations prior code update"
-  include: premigrations.yml
-  when: previous_checkout.stat.exists == True and previous_websauna.stat.exists == True
-
-- name: Deploy Websauna application from a Git repository
-  become: yes
-  become_user: wsgi
-  git: repo={{ git_repository }} dest={{deploy_location}} accept_hostkey=yes force=yes track_submodules=yes recursive=yes version={{ git_branch }}
 
 - name: Check existence of virtualenv
   stat: path={{ deploy_location }}/venv
