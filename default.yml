@@ -32,31 +32,29 @@ wsgi_user: wsgi
 # What is the name of the unix group owning /srv/pyramid/myapp files
 wsgi_group: wsgi
 
-# Where we are keeping our sensitive secrets file - default to a dummy built in file
-production_secrets_file: files/production-secrets.ini
-
 #: Where does the git checkout goes on the server
 deploy_location: "/srv/pyramid/{{ package_name }}"
 
-# Which INI file we load for uWSGI
+# The server path where we generate uWSGI configuration file.
 websauna_config_file: "{{ deploy_location }}/conf/{{ site_mode }}.ini"
 
-# Database configuration - PSQL trusts the UNIX user wsgi by default
+# Generated PostgreSQL database name.
 db_name: "{{ site_id }}_{{ site_mode }}"
+
+# Generated PostgreSQL user. Must match UNIX user running the application.
 db_user: "{{ wsgi_user }}"
+
+# Generated PostgreSQL user password. Not used as the default PSQL authentication mode is trust.
 db_password: "{{ wsgi_user }}"
 
 # SQLAlchemy connection URL - by default PostgreSQL does not require
 # authentication for local users
 db_sqlalchemy_url: "postgresql://localhost/{{ db_name }}"
 
-# Do we support SSL decoding on NGINX
-# ssl: off
-ssl_certificate_key: /etc/server.ssl.key
-ssl_certificate: /etc/server.ssl.crt
-
-# Python versions to install
+# Python versions to install on the server.
 python_versions: [3.5]
+
+# Name of the Python interpreter for creating the Websauna application :term:`virtual environment`.
 python_interpreter: python3.5
 
 # Allow to debug Celery woes by enforcing log level on command line
@@ -70,9 +68,10 @@ celery_log_level: info
 # Postfix
 # ----------------------------------------------------
 
-# Setup a
+# Which is the domain name where our outboound email comes from
 postfix_domain: "{{ package_name }}-local.{{ site_id }}"
 
+# Sysadmin email for Postfix notify emails
 postfix_notify_email: "{{ notify_email }}"
 
 # ----------------------------------------------------
@@ -88,27 +87,29 @@ postfix_notify_email: "{{ notify_email }}"
 # uWSGI version to install
 uwsgi_version: 2.0.12
 
-
-
 # ----------------------------------------------------
 # nginx
 # ----------------------------------------------------
 
-# Default self-signed certificates on local environment to copy over
+# A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
 local_certificate_file:
+
+# A certificate file key on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
 local_key_file:
 
+# Server-side path to a TLS certificate file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path: /etc/nginx/certificate.pem
 
-# Server-side path to certificate files for Nginx
-ssl_certificate: /etc/nginx/certificate.pem
-ssl_certificate_key: /etc/nginx/key.pem
+# Server-side path to a TLS certificate key file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path_key: /etc/nginx/key.pem
 
 # ----------------------------------------------------
 # PostgreSQL
 # ----------------------------------------------------
 
-# Basic settings
+# Installed PostgreSQL version
 postgresql_version: 9.5
+
 postgresql_ext_install_dev_headers: yes
 postgresql_encoding: 'UTF-8'
 postgresql_locale: 'en_US.UTF-8'
@@ -138,16 +139,16 @@ postgresql_user_privileges:
     priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
     role_attr_flags: "CREATEDB" # role attribute flags
 
-access_log: "/var/log/nginx/{{ site_id }}.access.log"
-error_log: "/var/log/nginx/{{ site_id }}.error.log"
+
+# Where does Nginx access log file goes
+nginx_access_log: "/var/log/nginx/{{ site_id }}.access.log"
+
+# Where does Nginx error log file goes
+nginx_error_log: "/var/log/nginx/{{ site_id }}.error.log"
 
 # ----------------------------------------------------
 # New relic
 # ----------------------------------------------------
-
-# Store this in the vault
-# new_relic_license_key:
-
 
 # ----------------------------------------------------
 # Log watch

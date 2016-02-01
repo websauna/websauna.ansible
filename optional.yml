@@ -2,15 +2,15 @@
 # Documentation for optional Playbook variables
 
 
-config_description: Variables defined in this playbook are optional. If you do not fill them Playbook doesn't take any action or generate anything.
+config_description: Variables defined here are optional for running Webasuna playbook. If you do not fill them Playbook doesn't take any action or generate anything. Usually these variables are required only if you turn on some of the optional services is required variables.
 
 # Extra settings placed in ``[app:main]`` section in generated production.ini.
-# Example:
+# Example::
 #
-# extra_ini_settings: |
-#     mail.host = mymailserver.internal
-#     websauna.superusers =
-#         mikko@example.com
+#     extra_ini_settings: |
+#         mail.host = mymailserver.internal
+#         websauna.superusers =
+#             mikko@example.com
 #
 ini_extra_settings:
 
@@ -23,4 +23,11 @@ htpasswd_user:
 htpasswd_password:
 
 
+# API key for New Relic. Keep this in Ansible vault.
+new_relic_license_key:
 
+# Mandrill username for outbound SMTP. Your sign up email like ``mikko@example.com``. Keep this in Ansible vault.
+mandrill_username:
+
+# Mandrill API key for outbound SMTP. Given in a :ref:`Mandrill` control panel. Usually like ``51X5G2MFJMWKOXXXX``. Keep this in Ansible vault.
+mandrill_api_key:

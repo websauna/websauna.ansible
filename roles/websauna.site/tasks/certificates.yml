@@ -1,7 +1,7 @@
 - name: Install certificate file for Nginx
-  copy: src={{ local_certificate_file }} dst={{ ssl_certificate }}
+  copy: src={{ local_certificate_file }} dst={{ nginx_ssl_certificate_path }}
   when: local_certificate_file
 
 - name: Install certificate key file for Nginx
-  copy: src={{ local_key_file }} dst={{ ssl_certificate_key }}
+  copy: src={{ local_key_file }} dst={{ nginx_ssl_certificate_path_key }}
   when: local_key_file
