@@ -17,26 +17,26 @@
 - name: Fail if SSH agent forward is not in use
   fail:
    msg: The Ansible server connection did not have SSH agent forwarding enabled.
-  when: "(ansible_env.SUDO_USER != 'vagrant') and ('SSH_AUTH_SOCK' not in ansible_env)"
+  when: "'SSH_AUTH_SOCK' not in ansible_env"
   tags: site-update
 
 - name: Fail if site mode is not set or is something we don't feel confident about
-  fail:
-   msg: The Ansible server connection did not have SSH agent forwarding enabled.
+  fail: msg="The Ansible server connection did not have SSH agent forwarding enabled"
   when: "site_mode not in ['production', 'staging']"
   tags: site-update
+  become: no
 
 # TODO: For some reason the following gives unknown SSH error on Vagrant
 - name: Check for local production-settings.ini
   local_action: "stat path={{ ini_secrets_file }}"
   register: ini_secrets_file_stat
   tags: site-update
-  when: ansible_env.SUDO_USER != 'vagrant'
+  when: "ansible_env.USER != 'vagrant'"
 
 - name: Fail if we cannot find the INI secrets file
   fail:
    msg: Please fill in ini_secrets_file setting - file not found
-  when: ansible_env.SUDO_USER != 'vagrant' and ini_secrets_file_stat.stat.exists == false
+  when: "ansible_env.USER != 'vagrant' and ini_secrets_file_stat.stat.exists == false"
   connection: local
   tags: site-update
 

@@ -4,10 +4,14 @@
 - name: debconf-set-selections mailname for postfix
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/mailname string {{ ansible_hostname }}.{{ postfix_domain }}"
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: debconf-set-selections mailer type for postfix
   shell: executable=/bin/bash debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: install postfix via apt
   apt: pkg={{ item }} update_cache=yes
@@ -19,13 +23,16 @@
      - libsasl2-modules
      - ca-certificates
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: Forward root user email to {{ notify_email }}
   shell: creates=~/.forward chdir=~ echo "{{ notify_email }}" > .forward
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: Forward {{ ansible_env.USER }} user email to {{ notify_email }}
-  sudo: false
   shell: creates=~/.forward chdir=~ echo "{{ notify_email }}" > .forward
   tags: postfix
 
@@ -56,7 +63,11 @@
 - name: Copy disk-usage-alert script to /etc/cron.hourly (emails when disk full)
   template: src=disk-usage-alert.sh dest=/etc/cron.hourly/disk-usage-alert owner=root group=root mode=755
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: Configure unattended upgrades in /etc/apt/apt.conf.d/50unattended-upgrades (emails upon upgrade failure)
   template: src=50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades
   tags: postfix
+  become: yes
+  become_user: root

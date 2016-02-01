@@ -1,8 +1,6 @@
 # Playbook which ramps up myapp tutorial site inside a Vagrant virtual machine
 
 - hosts: all
-  become: yes
-  become_user: root
   gather_facts: true
 
   # These need to be set up before reading default.yml - more variables are generated based on these
@@ -49,14 +47,20 @@
   - websauna.preflight
   - websauna.users
   - websauna.ssh
+  - websauna.shell
   - websauna.harden
   - websauna.postfix
   - websauna.mandrill
-  - ANXS.postgresql
-  - Stouts.nginx
-  - Stouts.redis
-  - Stouts.python
-  - { role: websauna.site, tags: [ 'site-update'] }
+  # These third party roles may assume you always run as root
+  - { role: ANXS.perl, become: yes, become_user: root }  # Needed for logwatch
+  - { role: ANXS.cron, become: yes, become_user: root }  # Needed for logwatch
+  - { role: ANXS.postgresql, become: yes, become_user: root }
+  - { role: ANXS.logwatch, become: yes, become_user: root }
+  - { role: Stouts.nginx, become: yes, become_user: root }
+  - { role: Stouts.redis, become: yes, become_user: root }
+  - { role: Stouts.python, become: yes, become_user: root }
+  - { role: websauna.site, tags: ['site-update'] }
   - websauna.postflight
+
 
 

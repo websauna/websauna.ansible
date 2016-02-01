@@ -3,7 +3,7 @@ venv
 hosts.ini
 galaxy/*
 *secrets.ini
-secrets.yml
+secrets*.yml
 
 # Don't commit playbook by accident, always force them.
 # This way you can manage private playbooks inside this repo

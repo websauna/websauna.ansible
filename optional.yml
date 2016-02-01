@@ -13,3 +13,14 @@ config_description: Variables defined in this playbook are optional. If you do n
 #         mikko@example.com
 #
 ini_extra_settings:
+
+
+# Nginx htpasswd username to protect the site. Keep this in Ansible vault.
+htpasswd_user:
+
+
+# Nginx htpasswd password to protect the site. Keep this in Ansible vault.
+htpasswd_password:
+
+
+

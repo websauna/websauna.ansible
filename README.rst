@@ -5,6 +5,8 @@ Deploy Websauna website with Ansible.
 Introduction
 ============
 
+`See more documentation here <https://websauna.org/narrative/deployment/index.html>`_.
+
 This is an Ansible playbook for automatically deploying a single server Websauna website from a git repository for Ubuntu 14.04 Linux. It allows you to do deploy your Websauna application to a fresh server, where you just received SSH credentials, within 30 minutes. Alternatively you can gracefully upgrade any existing running site.
 
 Automatic installation sets up
@@ -83,27 +85,3 @@ And to update a running VM::
 
     vagrant provision
 
-
-Log files
-=========
-
-Nginx logs::
-
-    /var/www/nginx/myapp.access.log
-    /var/www/nginx/myapp.error.log
-
-Python log::
-
-    /srv/pyramid/myapp/logs/websauna.log
-
-Celery log::
-
-    /srv/pyramid/myapp/logs/celery.log
-
-
-License
-=======
-
-This ansible playbook is licensed under MIT license.
-
-Test suite is licensed under GPL as per original author Plone foundation.

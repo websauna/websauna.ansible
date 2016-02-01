@@ -1,6 +1,8 @@
 - name: install Mandrill (Thawte Premium Server) SSL certificates
   shell: creates=/etc/postfix/cacert.pem cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | tee /etc/postfix/cacert.pem
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: configure postfix in /etc/postfix/main.cf
   lineinfile: dest=/etc/postfix/main.cf regexp='{{ item.regexp }}' line='{{ item.line }}'
@@ -12,6 +14,8 @@
     - { line: "mydomain = {{ postfix_domain }}", regexp: '^mydomain' }
     - { line: "inet_interfaces = 127.0.0.1", regexp: '^inet_interfaces' }
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: configure postfix's relayhost in /etc/postfix/main.cf
   lineinfile: dest=/etc/postfix/main.cf regexp='^relayhost = ' line='relayhost = [smtp.mandrillapp.com]:587'
@@ -19,11 +23,17 @@
     - restart postfix
     - send test email
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: setup Mandrill credentials for postfix
   template: src=sasl_passwd dest=/etc/postfix/sasl_passwd owner=root group=root mode=600
   tags: postfix
+  become: yes
+  become_user: root
 
 - name: run postmap to configure postfix lookup tables
   command: postmap /etc/postfix/sasl_passwd
   tags: postfix
+  become: yes
+  become_user: root

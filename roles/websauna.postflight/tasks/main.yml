@@ -5,3 +5,5 @@
   template:
     dest: /etc/motd
     src: motd.txt
+  become: yes
+  become_user: root

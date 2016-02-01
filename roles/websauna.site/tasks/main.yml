@@ -34,10 +34,14 @@
 - name: Check previous project checkouts
   stat: path={{ deploy_location }}/.git
   register: previous_checkout
+  become: yes
+  become_user: wsgi
 
 - name: Check we have correct Websauna install
   stat: path={{deploy_location}}/venv/bin/ws-dump-db
   register: previous_websauna
+  become: yes
+  become_user: wsgi
 
 # Full checkout would break existing running application because loading .py files
 # with models for which database tables do not exist
@@ -131,9 +135,11 @@
 - name: Deploy SSL certificates
   include: certificates.yml
 
-- name: Protect website with htpasswd
+- name: Deploy htpasswd passwords to protect Nginx
   htpasswd: "path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640"
   when: htpasswd_password is defined
+  become: yes
+  become_user: root
 
 - name: Deploy uWSGI config
   become: yes
