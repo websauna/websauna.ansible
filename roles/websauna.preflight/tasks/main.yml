@@ -40,3 +40,13 @@
   connection: local
   tags: site-update
 
+# If this happens your inbox gets hundreds of warnings due to sudo warning and logwatch during Ansible run
+- name: Make sure sudo doesn't cause warnings on AWS due to unresolvable hostname
+  become: yes
+  become_user: root
+  lineinfile:
+    dest: /etc/hosts
+    create: no
+    state: present
+    line: "127.0.0.1 {{ ansible_hostname }}"
+    regexp: "{{ ansible_hostname }}"

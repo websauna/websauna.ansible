@@ -7,7 +7,7 @@
   with_items:
     acl
 
-- name: Add ssh agent line to sudoers
+- name: Make sure sudoed users get access to SSH agent authentication socket
   become: yes
   become_user: root
   lineinfile:
@@ -56,17 +56,12 @@
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}"
     regexp: "^bitbucket\\.org"
 
-- name: Check if we are Amazon EC2 Ubuntu setup
-  stat: path=/home/ubuntu
-  register: home_ubuntu
-
-- name: Make sure we give rights to SSH_AUTH_SOCK on wsgi user on normal SSH login
+- name: Make sure we give rights to SSH_AUTH_SOCK on wsgi user on interactive SSH login
   become: yes
-  become_user: ubuntu
+  become_user: "{{ ansible_user }}"
   lineinfile:
-    line: "sudo setfacl -m u:wsgi:rw $SSH_AUTH_SOCK && sudo setfacl -m u:wsgi:x $(dirname $SSH_AUTH_SOCK)"
+    line: "if [ ! -z '$SSH_AUTH_SOCK' ] ; then sudo setfacl -m u:wsgi:rw $SSH_AUTH_SOCK && sudo setfacl -m u:wsgi:x $(dirname $SSH_AUTH_SOCK) ; fi"
     regexp: "sudo setfacl"
-    dest: "/home/ubuntu/.bashrc"
+    dest: "/home/{{ ansible_user }}/.bashrc"
     create: yes
     state: present
-  when: home_ubuntu.stat.exists == True

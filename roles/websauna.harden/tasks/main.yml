@@ -13,12 +13,12 @@
   become: yes
   become_user: root
 
-- name: Allow inbound HTTP
+- name: Allow inbound HTTP / WS
   action: shell ufw allow 80/tcp
   become: yes
   become_user: root
 
-- name: Allow inboud HTTPS
+- name: Allow inboud HTTPS / WSS
   action: shell ufw allow 443/tcp
   become: yes
   become_user: root
