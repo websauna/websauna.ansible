@@ -32,7 +32,7 @@
 
 # Check if we have an already running site
 - name: Check previous project checkouts
-  stat: path={{ deploy_location }}/.git
+  stat: path={{ deploy_location }}/venv/bin/ws-backup
   register: previous_checkout
   become: yes
   become_user: wsgi
@@ -106,15 +106,15 @@
   become_user: wsgi
   pip: requirements={{deploy_location}}/requirements.txt virtualenv={{deploy_location}}/venv
 
+- name: Install application package
+  become: yes
+  become_user: wsgi
+  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
+
 - name: Install uWSGI
   become: yes
   become_user: wsgi
   pip: name=uwsgi version={{ uwsgi_version }} virtualenv={{deploy_location}}/venv
-
-- name: Install Websauna application Python package
-  become: yes
-  become_user: wsgi
-  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
 
 # Now run un-run migrations unconditionally regardless if we
 # are a prisitine or already running site
