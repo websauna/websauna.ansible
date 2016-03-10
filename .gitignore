@@ -8,3 +8,6 @@ secrets*.yml
 # Don't commit playbook by accident, always force them.
 # This way you can manage private playbooks inside this repo
 playbook*.yml
+
+# Ansible retry files
+*.retry
