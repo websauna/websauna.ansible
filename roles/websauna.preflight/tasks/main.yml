@@ -21,7 +21,7 @@
   tags: site-update
 
 - name: Fail if site mode is not set or is something we don't feel confident about
-  fail: msg="The Ansible server connection did not have SSH agent forwarding enabled"
+  fail: msg="The Ansible server connection did not have SSH agent forwarding enabled or you have become_user\:root in your playbook which you should not have"
   when: "site_mode not in ['production', 'staging']"
   tags: site-update
   become: no

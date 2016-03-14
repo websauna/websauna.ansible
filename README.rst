@@ -85,3 +85,14 @@ And to update a running VM::
 
     vagrant provision
 
+
+Issue backlog
+=============
+
+ANXS.postgresql broken:
+
+* https://github.com/ANXS/postgresql/issues/156
+
+setuptools broken:
+
+* https://bitbucket.org/pypa/setuptools/issues/502/packaging-164-does-not-allow-whitepace
