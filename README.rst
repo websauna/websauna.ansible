@@ -19,9 +19,7 @@ Automatic installation sets up
 
 * Celery
 
-* Postfix
-
-* Email out via Mandrill
+* Email out via upstream SMTP server and locally configured Postfix
 
 * Supervisot startup scripts
 

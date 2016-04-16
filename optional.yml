@@ -22,7 +22,6 @@ htpasswd_user:
 # Nginx htpasswd password to protect the site. Keep this in Ansible vault.
 htpasswd_password:
 
-
 # API key for New Relic. Keep this in Ansible vault.
 new_relic_license_key:
 
@@ -32,5 +31,3 @@ mandrill_username:
 # Mandrill API key for outbound SMTP. Given in a :ref:`Mandrill` control panel. Usually like ``51X5G2MFJMWKOXXXX``. Keep this in Ansible vault.
 mandrill_api_key:
 
-# Extra raw text going to generated production.ini [app:main] section
-ini_extra_settings:
