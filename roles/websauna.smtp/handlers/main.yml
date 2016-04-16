@@ -1,0 +1,9 @@
+---
+# file: roles/postfix_mandrill/handlers/main.yml
+
+- name: Restart Postfix
+  service: name=postfix state=restarted
+  become: yes
+  become_user: root
+  notify:
+    - Notification email

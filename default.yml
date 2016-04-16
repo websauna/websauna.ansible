@@ -1,28 +1,4 @@
-# The following is mandatory to fill in your playbook.yml
-
-# The name of your Python package e.g. myapp
-# package_name:
-
-# SSH url to git repository e.g. git@github.com:websauna/myapp.git
-# git_repo:
-
-# E.g. myapp_prod
-# site_id:
-
-# One of: production, staging
-# site_mode:
-
-#: Your sysadmin email address
-# notify_email:
-
-# ssl: off
-# mandrill: off
-# cloudflare: off
-# new_relic: off
-
-# ---------------------------------------------------
-
-config_description: Default generated variable values. These settings are generated from required settings. If you wish to override any of the value please use ``include_vars`` Ansible comment after ``default.yml`` is included in your playbook.
+config_description: These are default Ansible variables consumed by various templates in Websauna deployment. They are generated based on core information you give it. You can override any of these variables by including another variable file after default.yml in your playbook using``include_vars`` Ansible command after ``default.yml`` is included in your playbook.
 
 
 # What is the name of the unix user owning /srv/pyramid/myapp files
@@ -69,16 +45,10 @@ celery_log_level: info
 # ----------------------------------------------------
 
 # Which is the domain name where our outboound email comes from
-postfix_domain: "{{ package_name }}-local.{{ site_id }}"
+postfix_domain: "{{ server_email_domain }}"
 
 # Sysadmin email for Postfix notify emails
 postfix_notify_email: "{{ notify_email }}"
-
-# ----------------------------------------------------
-# Mandrill
-# ----------------------------------------------------
-
-# mandrill_username and mandrill_api_key go to the vault
 
 # ----------------------------------------------------
 # uWSGI
@@ -145,10 +115,10 @@ postgresql_user_privileges:
     role_attr_flags: "CREATEDB" # role attribute flags
 
 # Where does Nginx access log file goes
-nginx_access_log: "/var/log/nginx/{{ site_id }}.access.log"
+nginx_access_log: /var/log/nginx/{{ site_id }}.access.log
 
 # Where does Nginx error log file goes
-nginx_error_log: "/var/log/nginx/{{ site_id }}.error.log"
+nginx_error_log: /var/log/nginx/{{ site_id }}.error.log
 
 # ----------------------------------------------------
 # New relic

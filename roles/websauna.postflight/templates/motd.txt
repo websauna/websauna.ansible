@@ -1,4 +1,4 @@
-This server has been automatically set up by websauna.ansible playbook.
+{{ server_name }} server has been automatically set up by websauna.ansible playbook.
 
 Helpful commands
 ----------------
@@ -19,7 +19,7 @@ Enter database shell:
     sudo -i -u wsgi
     ws-db-shell conf/production.ini
 
-Restart web:
+Restart web front end and application servers:
 
     sudo -i
     service nginx restart && supervisorctl restart uwsgi
@@ -38,7 +38,8 @@ Setup info
 ----------
 
 Sysadmin email:         {{ notify_email }}
-Nginx listing IP:       {{ www_ip }}
+Server from email:      {{ server_email }}
+Nginx listening at IP:  {{ www_ip }}
 
 WSGI application log:   {{ deploy_location }}/logs/websauna.log
 uWSGI stdout log:       {{ deploy_location }}/logs/uwsgi.log

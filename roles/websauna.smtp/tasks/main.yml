@@ -1,0 +1,5 @@
+- include: postfix.yml
+  tags: smtp
+
+- include: smtp.yml
+  tags: smtp

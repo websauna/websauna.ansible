@@ -1,0 +1,5 @@
+- name: Notification email
+  shell: mail -s "Playbook complete at {{ server_name }}" -r {{ server_email }} {{ notify_email }} < /etc/motd
+  become: yes
+  become_user: root
+  tags: smtp, site

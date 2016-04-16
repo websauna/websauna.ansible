@@ -48,6 +48,18 @@
     create: yes
     state: present
 
+- name: Envelope cron email
+  tags: postfix
+  become: yes
+  become_user: root
+  lineinfile:
+    line: "MAILFROM={{ server_email }}"
+    insertafter: "^PATH"
+    regexp: "^MAILFROM"
+    dest: "/etc/crontab"
+    create: yes
+    state: present
+
 #
 - name: Alias root email
   tags: postfix

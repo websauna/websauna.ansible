@@ -25,9 +25,15 @@ htpasswd_password:
 # API key for New Relic. Keep this in Ansible vault.
 new_relic_license_key:
 
-# Mandrill username for outbound SMTP. Your sign up email like ``mikko@example.com``. Keep this in Ansible vault.
-mandrill_username:
+# SMTP server name for outboind email.
+smtp_server:
 
-# Mandrill API key for outbound SMTP. Given in a :ref:`Mandrill` control panel. Usually like ``51X5G2MFJMWKOXXXX``. Keep this in Ansible vault.
-mandrill_api_key:
+# SMTP service username for outbound email. Your sign up email like ``mikko@example.com``. Keep this in Ansible vault.
+smtp_username:
+
+# SMTP service API key for outbound email.
+smtp_password:
+
+# SMTP server port for outgoing email. Usually 587.
+smpt_port:
 

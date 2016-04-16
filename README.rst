@@ -51,27 +51,6 @@ Secrets file for the production site is not kept in version control to avoid acc
 
 If no setting is given a dummy empty ``production-secrets.ini`` is created.
 
-Create hosts.ini
-----------------
-
-Below is an example ``hosts.ini`` for Amazon EC2 server::
-
-    [default]
-    production ansible_ssh_host=1.2.3.4 ansible_ssh_user=ubuntu public_ip=1.2.3.4 server_name=websauna.example.com ansible_ssh_private_key_file=~/.ssh/example.pem site_id=production git_repo= git_branch=master
-
-
-* Ansible connects to the server via host IP ``1.2.3.4``
-
-* ``public_ip`` is the server IP address where HTTP/HTTPS port is bound. It may differ from SSH IP.
-
-* ``server_name`` is for Nginx - the HTTP host we are serving
-
-* ``site_id`` is used e.g. when generating ids for backup scripts, New Relic monitoring ids and such.
-
-* ``git_repo`` is the Git repository of the source code of the project based on ``websauna_app`` scaffold
-
-* ``git_branch`` is the name of the branch to deploy
-
 Local testing
 =============
 

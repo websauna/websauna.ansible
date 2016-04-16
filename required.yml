@@ -5,6 +5,15 @@ config_description: These variables are required to be filled in for every websa
 # What is the DNS address and Nginx ``server_name`` this site should reply. Example: ``mysite.example.com``.
 server_name:
 
+# What this the suffix domain used by Postfix when generating emails from this server. Example: ``example.com``
+server_email_domain:
+
+# What From: email addresses server uses for outgoing email notifications. Example: ``no-reply@example.com``
+server_email:
+
+# Where do we send email about server logs, failures, cron jobs. Use your sysadmin email address.
+notify_email:
+
 # What is the Git repository URL for deployed Websauna application. E.g. ``git@bitbucket.org:miohtama/example.git``
 git_repository:
 
@@ -37,9 +46,6 @@ letsenrypt:
 
 # Do we install an automatic Duplicity backup script. If `òn`` you need have credentials for Duplicity backup scripts in the :term:`secrets` INI file.
 backup:
-
-# Where do we send email about server logs, failures, cron jobs. Use your sysadmin email address.
-notify_email:
 
 # Site mode is either ``staging`` or ``production``. This is used e.g. when generating database names, so that different environments get their own database.
 site_mode:

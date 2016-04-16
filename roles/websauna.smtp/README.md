@@ -1,0 +1,1 @@
+Configure Postfix to send out email to the world using free smtp.com service

@@ -20,7 +20,7 @@ do
   partition=$(echo $output | awk '{print $2}')
   if [ $usep -ge $USE_ALERT_PCT ] ; then
      echo "Running out of disk space: $partition is $usep% used on server $(hostname)." | \
-     mail -s "WARNING: $(hostname) running out of disk space: $usep% used" root
+     mail -aFrom: {{ server_email }} -s "WARNING: $(hostname) running out of disk space: $usep% used" {{ notify_email }}
   fi
 done
 }

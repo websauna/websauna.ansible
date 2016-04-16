@@ -7,3 +7,14 @@
     src: motd.txt
   become: yes
   become_user: root
+  tags: smtp, site
+
+# Always trigger notification email
+# http://serverfault.com/a/620528/74975
+- name: Finish playbook
+  command: /bin/true
+  notify:
+    - Notification email
+  tags: smtp, site
+
+
