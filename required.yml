@@ -29,8 +29,8 @@ site_id:
 # Do we enable Websockets pass through in Nginx configuration. Required to run IPython Notebooks. Set to ``on``.
 websocket:
 
-# Do we configure outbound email through mandrill.com service. See :ref:`mandrill` deployment documentation for more information. If not set you need to configure outbound email for Postfix yourself.
-mandrill:
+# Do we configure outbound email through mandrill.com service. See :ref:`outbound-email` deployment documentation for more information. If not set you need to configure outbound email for Postfix yourself.
+smtp:
 
 # Does Nginx accept HTTPS connections. If turned on you need to supply SSL certificate files for Playbook.
 ssl:
