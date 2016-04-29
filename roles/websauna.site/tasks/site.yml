@@ -67,12 +67,12 @@
 - name: Deploy INI config
   become: yes
   become_user: wsgi
-  template: src=production.ini dest={{ deploy_location }}/conf/{{ site_mode }}.ini
+  template: src=generated.ini dest={{ websauna_config_file }}
 
 - name: Deploy site secrets
   become: yes
   become_user: wsgi
-  template: src={{ ini_secrets_file }} dest={{ deploy_location }}/conf/{{ site_mode }}-secrets.ini
+  template: src={{ ini_secrets_file }} dest={{ websauna_secrets_ini_file }}
 
 - name: Check existence of virtualenv
   stat: path={{ deploy_location }}/venv
@@ -101,10 +101,12 @@
   become_user: wsgi
   lineinfile: dest=/home/{{ wsgi_user }}/.profile regexp='^cd /srv' line='cd {{ deploy_location }}'
 
+# We don't use Ansible pip module here becuase
+# https://github.com/ansible/ansible-modules-core/issues/2697
 - name: Install Python packages
   become: yes
   become_user: wsgi
-  pip: requirements={{deploy_location}}/requirements.txt virtualenv={{deploy_location}}/venv
+  command: "{{deploy_location}}/venv/bin/pip install --no-input -r {{deploy_location}}/requirements.txt --index-url={{ pypi_index_url }}"
 
 - name: Install application package
   become: yes
@@ -125,12 +127,12 @@
 - name: Perform database sanity check
   become: yes
   become_user: wsgi
-  command: "{{ deploy_location }}/venv/bin/ws-sanity-check conf/{{ site_mode }}.ini chdir={{ deploy_location }}"
+  command: "{{ deploy_location }}/venv/bin/ws-sanity-check {{ websauna_config_file }} chdir={{ deploy_location }}"
 
 - name: Collect static files
   become: yes
   become_user: wsgi
-  command: "{{ deploy_location }}/venv/bin/ws-collect-static conf/{{ site_mode }}.ini chdir={{ deploy_location }}"
+  command: "{{ deploy_location }}/venv/bin/ws-collect-static {{ websauna_config_file }} chdir={{ deploy_location }}"
 
 - name: Deploy SSL certificates
   include: certificates.yml

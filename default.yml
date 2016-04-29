@@ -11,10 +11,20 @@ wsgi_group: wsgi
 #: Where does the git checkout goes on the server
 deploy_location: "/srv/pyramid/{{ package_name }}"
 
-# The server path where we generate uWSGI configuration file.
-websauna_config_file: "{{ deploy_location }}/conf/{{ site_mode }}.ini"
+# The server path where we generate INI file for Pyramid. Ansible will fill in details like database.
+websauna_config_file: "{{ deploy_location }}/conf/generated.ini"
 
-# Generated PostgreSQL database name.
+# Where we place secrets INI file on our server
+websauna_secrets_ini_file: "{{ deploy_location }}/conf/{{ site_mode }}-secrets.ini"
+
+# The [includes] section for generated configuration file
+websauna_config_includes: >
+    resource://{{ package_name }}/conf/{{ site_mode }}.ini
+    resource://websauna/production.ini
+    resource://{{ package_name }}/conf/base.ini
+    resource://websauna/base.ini
+
+# Generated PostgreSQL database n ame.
 db_name: "{{ site_id }}_{{ site_mode }}"
 
 # Generated PostgreSQL user. Must match UNIX user running the application.
@@ -32,6 +42,9 @@ python_versions: [3.5]
 
 # Name of the Python interpreter for creating the Websauna application :term:`virtual environment`.
 python_interpreter: python3.5
+
+# PyPi mirror from where the packages are downloaded from. For an enterprise setup you might want to point this to your own server. For example custom PyPi hosting, see http://doc.devpi.net/
+pypi_index_url: https://pypi.python.org/simple
 
 # Allow to debug Celery woes by enforcing log level on command line
 celery_log_level: info
