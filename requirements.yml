@@ -1,0 +1,20 @@
+# Ansible playbook requirements
+
+#
+# from github
+#
+
+# Show stopper bug https://github.com/ANXS/postgresql/pull/164
+# not being merged as the writing of this, use a patched fork on Github
+#- src: https://github.com/teralytics/ansible-postgresql
+- src: git+https://github.com/websauna/ANXS.postgresql.git
+  name: ANXS.postgresql
+
+#
+# from galaxy.ansible.com
+#
+
+- src: ANXS.logwatch
+- src: Stouts.nginx
+- src: Stouts.redis
+- src: Stouts.python
