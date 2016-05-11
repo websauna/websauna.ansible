@@ -19,6 +19,8 @@
     - python-boto
     - python-virtualenv
     - libpq-dev
+    - libffi-dev
+    - libzmq3-dev
 
 - name: Create /srv/pyramid
   become: yes
