@@ -2,4 +2,4 @@
 - name: Run Alembic migrations
   become: yes
   become_user: wsgi
-  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/{{ site_mode }}.ini upgrade head chdir={{ deploy_location }}"
+  command: "{{deploy_location}}/venv/bin/ws-alembic -c {{ websauna_config_file }} upgrade head chdir={{ deploy_location }}"

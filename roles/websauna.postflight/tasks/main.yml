@@ -1,13 +1,12 @@
 ---
 
 - name: Update MOTD
-  tags: motd
   template:
     dest: /etc/motd
     src: motd.txt
   become: yes
   become_user: root
-  tags: smtp, site
+  tags: smtp, site, motd
 
 # Always trigger notification email
 # http://serverfault.com/a/620528/74975

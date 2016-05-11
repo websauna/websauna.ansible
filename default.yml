@@ -37,6 +37,9 @@ db_password: "{{ wsgi_user }}"
 # authentication for local users
 db_sqlalchemy_url: "postgresql://localhost/{{ db_name }}"
 
+# Do a SQL dump before running migration scripts against the database. Expensive on larger systems.
+db_backup_dump_before_migration: true
+
 # Python versions to install on the server.
 python_versions: [3.5]
 
@@ -165,3 +168,10 @@ logwatch_cron_time: "daily"
 
 # Where created .ipynb files and IPython Notebook startup and error logs are stored
 pyramid_notebook_notebook_folder: "{{ deploy_location}}/notebooks"
+
+# ----------------------------------------------------
+# Supervisor
+# ----------------------------------------------------
+
+# Supervisor config template. Create templates folder and supply your own supervisor startup handlers by giving a custom config filename here.
+supervisor_config: supervisor.conf

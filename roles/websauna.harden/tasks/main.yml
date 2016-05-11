@@ -27,3 +27,10 @@
   action: shell echo 'y' | ufw enable
   become: yes
   become_user: root
+  when: firewall == True
+
+- name: Disable firewall
+  action: shell echo 'y' | ufw disable
+  become: yes
+  become_user: root
+  when: firewall == False

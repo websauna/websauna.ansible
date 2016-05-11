@@ -8,7 +8,8 @@
 - name: Backup SQL database before migrations
   become: yes
   become_user: wsgi
-  shell: "{{deploy_location}}/venv/bin/ws-dump-db conf/{{ site_mode }}.ini > /home/wsgi/site.sql  chdir={{ deploy_location }}"
+  shell: "{{deploy_location}}/venv/bin/ws-dump-db {{ websauna_config_file }} > /home/wsgi/site.sql  chdir={{ deploy_location }}"
+  when: db_backup_dump_before_migration == True
 
 # TODO
 - name: Fetch latest Alembic scripts from Git remote master for migrations
@@ -20,4 +21,4 @@
 - name: Run Alembic migrations
   become: yes
   become_user: wsgi
-  command: "{{deploy_location}}/venv/bin/ws-alembic -c conf/{{ site_mode }}.ini upgrade head chdir={{ deploy_location }}"
+  command: "{{deploy_location}}/venv/bin/ws-alembic -c {{ websauna_config_file }} upgrade head chdir={{ deploy_location }}"
