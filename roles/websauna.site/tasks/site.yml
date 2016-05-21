@@ -163,7 +163,7 @@
 - name: Deploy Nginx configuration
   become: yes
   become_user: root
-  template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
+  template: src={{ nginx_conf_template }} dest=/etc/nginx/sites-enabled/default
   notify:
     - nginx restart
 

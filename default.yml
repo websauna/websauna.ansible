@@ -77,6 +77,9 @@ uwsgi_version: 2.0.12
 # nginx
 # ----------------------------------------------------
 
+# The template file we use for Nginx
+nginx_conf_template: nginx.conf
+
 # A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
 local_certificate_file:
 
