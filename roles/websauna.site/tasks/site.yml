@@ -166,6 +166,7 @@
   template: src={{ nginx_conf_template }} dest=/etc/nginx/sites-enabled/default
   notify:
     - nginx restart
+  tags: nginx-config
 
 # TODO: Graceful uWSGI loading
 # https://uwsgi-docs.readthedocs.org/en/latest/articles/TheArtOfGracefulReloading.html#standard-default-boring-graceful-reload-aka-sighup
