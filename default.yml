@@ -20,9 +20,9 @@ websauna_secrets_ini_file: "{{ deploy_location }}/conf/{{ site_mode }}-secrets.i
 # The [includes] section for generated configuration file
 websauna_config_includes: >
     resource://{{ package_name }}/conf/{{ site_mode }}.ini
-    resource://websauna/production.ini
+    resource://websauna/conf/production.ini
     resource://{{ package_name }}/conf/base.ini
-    resource://websauna/base.ini
+    resource://websauna/conf/base.ini
 
 # Generated PostgreSQL database n ame.
 db_name: "{{ site_id }}_{{ site_mode }}"
