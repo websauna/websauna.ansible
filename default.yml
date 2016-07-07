@@ -178,3 +178,7 @@ pyramid_notebook_notebook_folder: "{{ deploy_location}}/notebooks"
 
 # Supervisor config template. Create templates folder and supply your own supervisor startup handlers by giving a custom config filename here.
 supervisor_config: supervisor.conf
+
+# Template used to create motd.txt file
+motd_template: motd.txt
+
