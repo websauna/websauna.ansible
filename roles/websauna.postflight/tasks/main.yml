@@ -3,7 +3,7 @@
 - name: Update MOTD
   template:
     dest: /etc/motd
-    src: "{{ motd_template }}"
+    src: motd.txt
   become: yes
   become_user: root
   tags: smtp, site, motd

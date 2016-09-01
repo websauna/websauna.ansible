@@ -11,11 +11,17 @@ wsgi_group: wsgi
 #: Where does the git checkout goes on the server
 deploy_location: "/srv/pyramid/{{ package_name }}"
 
+# Deploy production.ini and production-secrets.ini here
+websauna_conf_folder: "{{ deploy_location }}/{{ package_name }}/conf"
+
 # The server path where we generate INI file for Pyramid. Ansible will fill in details like database.
-websauna_config_file: "{{ deploy_location }}/conf/generated.ini"
+websauna_config_file: "{{ websauna_conf_folder }}/generated.ini"
 
 # Where we place secrets INI file on our server
-websauna_secrets_ini_file: "{{ deploy_location }}/conf/{{ site_mode }}-secrets.ini"
+websauna_secrets_ini_file: "{{ websauna_conf_folder }}/generated-secrets.ini"
+
+# Where to deploy WSGI entry script
+websauna_wsgi_file: "{{ websauna_conf_folder }}/websauna.wsgi"
 
 # The [includes] section for generated configuration file
 websauna_config_includes: >
@@ -49,6 +55,10 @@ python_interpreter: python3.5
 # PyPi mirror from where the packages are downloaded from. For an enterprise setup you might want to point this to your own server. For example custom PyPi hosting, see http://doc.devpi.net/
 pypi_index_url: https://pypi.python.org/simple
 
+# -----------------------
+# Celery
+# -----------------------
+
 # Allow to debug Celery woes by enforcing log level on command line
 celery_log_level: info
 
@@ -73,12 +83,11 @@ postfix_notify_email: "{{ notify_email }}"
 # uWSGI version to install
 uwsgi_version: 2.0.12
 
+uwsgi_config: "{{ websauna_conf_folder }}/uwsgi.ini"
+
 # ----------------------------------------------------
 # nginx
 # ----------------------------------------------------
-
-# The template file we use for Nginx
-nginx_conf_template: nginx.conf
 
 # A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
 local_certificate_file:
@@ -178,7 +187,3 @@ pyramid_notebook_notebook_folder: "{{ deploy_location}}/notebooks"
 
 # Supervisor config template. Create templates folder and supply your own supervisor startup handlers by giving a custom config filename here.
 supervisor_config: supervisor.conf
-
-# Template used to create motd.txt file
-motd_template: motd.txt
-

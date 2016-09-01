@@ -30,6 +30,11 @@
   shell: ls $SSH_AUTH_SOCK
   tags: site-update
 
+- name: Accept common SSH keys like github.com and bitbucket.org
+  become: yes
+  become_user: wsgi
+  shell: ls $SSH_AUTH_SOCK
+
 # TODO: Replace these with https://github.com/bfmartin/ansible-sshknownhosts
 - name: Ensure github.com is a known host
   become: yes

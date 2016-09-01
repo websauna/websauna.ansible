@@ -18,12 +18,12 @@
   become: yes
   become_user: root
   notify:
-    - Restart postfix
+    - Restart Postfix
 
 - name: Configure outbound SMTP as Postfix's relayhost
   lineinfile: dest=/etc/postfix/main.cf regexp='^relayhost = ' line='relayhost = [{{ smtp_server }}]:{{ smtp_port }}'
   notify:
-    - Restart postfix
+    - Restart Postfix
   tags: postfix
   become: yes
   become_user: root
@@ -34,7 +34,7 @@
   become: yes
   become_user: root
   notify:
-    - Restart postfix
+    - Restart Postfix
 
 - name: Run postmap to configure Postfix username lookup tables
   command: postmap /etc/postfix/sasl_passwd
