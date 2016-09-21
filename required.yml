@@ -38,6 +38,9 @@ ssl:
 # Do we use cloudflare.com proxy at the front of the side. If yes then Nginx is made to accept HTTP/HTTPS connections from Cloudflare servers only.
 cloudflare:
 
+# Use Celery to process asynchronous tasks
+celery:
+
 # Do we use NewRelic.com monitoring for the server. If ``on`` you need to supply New Relic API key.
 new_relic:
 

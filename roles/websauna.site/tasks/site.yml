@@ -178,11 +178,13 @@
   become: yes
   become_user: root
   supervisorctl: name=celery-worker state=restarted
+  when: celery
 
 - name: Start Celery beat process
   become: yes
   become_user: root
   supervisorctl: name=celery-beat state=restarted
+  when: celery
 
 
 
