@@ -83,7 +83,11 @@ postfix_notify_email: "{{ notify_email }}"
 # uWSGI version to install
 uwsgi_version: 2.0.12
 
-uwsgi_config: "{{ websauna_conf_folder }}/uwsgi.ini"
+# Template used for uWSGI config
+uwsgi_config_source: uwsgi.ini
+
+# Where uWSGI config is placed on the server
+uwsgi_config_target: "{{ websauna_conf_folder }}/uwsgi.ini"
 
 # ----------------------------------------------------
 # nginx

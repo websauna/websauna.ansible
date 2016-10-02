@@ -148,7 +148,7 @@
 - name: Deploy uWSGI config
   become: yes
   become_user: wsgi
-  template: "src=uwsgi.ini dest={{ uwsgi_config }}"
+  template: "src={{ uwsgi_config_source }} dest={{ uwsgi_config_target }}"
 
 - name: Deploy WSGI hander
   become: yes
