@@ -1,0 +1,22 @@
+- name: Restart uWSGI
+  supervisorctl: name=uwsgi state=restarted
+  become: yes
+  become_user: root
+
+- name: Restart Celery worker
+  become: yes
+  become_user: root
+  supervisorctl: name=celery-worker state=restarted
+  when: celery
+
+- name: Restart Celery beat
+  become: yes
+  become_user: root
+  supervisorctl: name=celery-beat state=restarted
+  when: celery
+
+- name: Restart Nginx
+  become: yes
+  become_user: root
+  service: name=nginx state=restarted
+

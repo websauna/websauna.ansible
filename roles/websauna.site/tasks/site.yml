@@ -21,6 +21,23 @@
     - libpq-dev
     - libffi-dev
     - libzmq3-dev
+    - ntp
+
+# Change Amazon EC2 ip-172-30-1-108 to something human readable
+- name: Set hostname
+  become: yes
+  become_user: root
+  hostname: name={{ ansible_host }}
+
+- name: Set /etc/hosts for the current hostname
+  become: yes
+  become_user: root
+  lineinfile:
+    dest: /etc/hosts
+    create: false
+    state: present
+    line: "127.0.1.1 {{ ansible_host }}"
+    regexp: "{{ ansible_host }}"
 
 - name: Create /srv/pyramid
   become: yes
@@ -55,6 +72,10 @@
   become: yes
   become_user: wsgi
   git: repo={{ git_repository }} dest={{deploy_location}} accept_hostkey=yes force=yes track_submodules=yes recursive=yes version={{ git_branch }}
+  notify:
+    - Restart uWSGI
+    - Restart Celery worker
+    - Restart Celery beat
 
 - name: Create logs folder
   become: yes
@@ -149,6 +170,7 @@
   become: yes
   become_user: wsgi
   template: "src={{ uwsgi_config_source }} dest={{ uwsgi_config_target }}"
+  tags: uwsgi
 
 - name: Deploy WSGI hander
   become: yes
@@ -166,25 +188,6 @@
   template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
   notify:
     - nginx restart
-
-# TODO: Graceful uWSGI loading
-# https://uwsgi-docs.readthedocs.org/en/latest/articles/TheArtOfGracefulReloading.html#standard-default-boring-graceful-reload-aka-sighup
-- name: Start uWSGI
-  become: yes
-  become_user: root
-  supervisorctl: name=uwsgi state=restarted
-
-- name: Start Celery worker process
-  become: yes
-  become_user: root
-  supervisorctl: name=celery-worker state=restarted
-  when: celery
-
-- name: Start Celery beat process
-  become: yes
-  become_user: root
-  supervisorctl: name=celery-beat state=restarted
-  when: celery
 
 
 
