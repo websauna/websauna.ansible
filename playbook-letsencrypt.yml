@@ -1,0 +1,90 @@
+# Let's encrypt example that install myapp tutorial git repository on Amazon EC2 server
+#
+# Requirements:
+#
+# ansible-galaxy install
+#
+
+- hosts: letsencrypt-test
+  gather_facts: true
+  vars:
+    - package_name: myapp
+    - site_id: myapp
+
+    # Do we create Let's Encrypt HTTPS certificate for the site
+    - letsenrypt: on
+
+    # Websocket is only needed to connect to IPython Notebook running on the server
+    - websocket: off
+
+    # Install Postfix for email out
+    - smtp: on
+
+    # Is HTTPS traffic terminated by Nginx
+    - ssl: on
+
+    # Do we install Celery worker and beat to run background tasks
+    - celery: off
+
+    # Is the site proxied by Cloudflare security service
+    - cloudflare: off
+
+    # Do we need to support New Relic monitoring
+    - new_relic: off
+
+    # Do we enable Linux firewall
+    - firewall: off
+
+    # Do we set up Duplicity backup tasks
+    - backup: off
+
+    - git_repository: git@github.com:websauna/myapp.git
+    - git_branch: master
+    - site_mode: production
+
+    - ini_secrets_file: ../websauna/websauna/conf/test.ini
+
+    - server_name: myapp.websauna.org
+
+    # Configured outbound domain for Postfix
+    - server_email_domain: opensourcehacker.net
+
+    # System outgoing email address (cron others)
+    - server_email: no-reply@opensourcehacke.net
+
+    # Receive messages from Cron and system scripts to this address
+    - notify_email: mikko@opensourcehacke.net
+
+    # Let's encrypt parameters
+    - letsencrypt_webroot_path: /var/www/html
+    - letsencrypt_email: mikko@opensourcehacker.net
+    - letsencrypt_cert_domains:
+      - '{{ server_name }}'
+    - letsencrypt_renewal_command_args: '--renew-hook "service nginx restart"'  # Ubuntu 14.04 nginx restart
+
+  pre_tasks:
+
+    # Point to websauna.ansible/default.yml
+    - include_vars: default.yml
+      tags: site, smtp
+
+    # Point to your secrets file
+    - include_vars: secrets.yml
+      tags: site, smtp
+
+  roles:
+  - { role: websauna.preflight, tags: ['site'] }
+  - websauna.users
+  - { role: websauna.ssh, tags: ['site'] }  # Needed to setup SSH auth socket for github/bitbucket
+  - websauna.shell
+  - websauna.harden
+  - websauna.smtp
+  - { role: ANXS.postgresql, become: yes, become_user: root, tags: ['psql'] }
+  - { role: Stouts.nginx, become: yes, become_user: root, tags: ['site'] }  # websauna.site may override Nginx config
+  - { role: Stouts.redis, become: yes, become_user: root, tags: redis }
+  - { role: Stouts.python, become: yes, become_user: root }
+  - {role: ansible-letsencrypt, tags: 'letsencrypt'}
+  - { role: websauna.site, tags: ['site'] }  # Core site update logic
+  - { role: websauna.postflight, tags: ['site'] }  # Finalize: send out email, update motd
+
+

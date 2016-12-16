@@ -1,0 +1,2 @@
+- src: git+https://github.com/websauna/ansible-letsencrypt.git
+  name: ansible-letsencrypt
