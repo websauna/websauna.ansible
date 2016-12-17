@@ -1,0 +1,20 @@
+- name: Deploy SSL certificates
+  include: certificates.yml
+  tags: nginx
+
+- name: Deploy htpasswd passwords to protect Nginx
+  htpasswd: "path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640"
+  when: htpasswd_password is defined
+  become: yes
+  become_user: root
+  tags: nginx
+  notify:
+  - Reload Nginx
+
+- name: Deploy Nginx configuration
+  become: yes
+  become_user: root
+  template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
+  notify:
+    - Reload Nginx
+  tags: nginx

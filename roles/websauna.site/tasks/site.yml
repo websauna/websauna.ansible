@@ -3,25 +3,7 @@
   become: yes
   become_user: root
   apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
-  with_items:
-    - git
-    - supervisor
-    - build-essential
-    - libfreetype6-dev
-    - libncurses5-dev
-    - libxml2-dev
-    - libxslt1-dev
-    - libjpeg-dev
-    - libpng12-dev
-    - fail2ban
-    - gettext
-    - duplicity
-    - python-boto
-    - python-virtualenv
-    - libpq-dev
-    - libffi-dev
-    - libzmq3-dev
-    - ntp
+  with_items: "{{ dependencies }}"
 
 # Change Amazon EC2 ip-172-30-1-108 to something human readable
 - name: Set hostname
@@ -136,11 +118,6 @@
   become_user: wsgi
   command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
 
-- name: Install uWSGI
-  become: yes
-  become_user: wsgi
-  pip: name=uwsgi version={{ uwsgi_version }} virtualenv={{deploy_location}}/venv
-
 # Now run un-run migrations unconditionally regardless if we
 # are a prisitine or already running site
 - name: Run migrations after codebase update and for pristine sites
@@ -157,37 +134,17 @@
   become_user: wsgi
   command: "{{ deploy_location }}/venv/bin/ws-collect-static {{ websauna_config_file }} chdir={{ deploy_location }}"
 
-- name: Deploy SSL certificates
-  include: certificates.yml
+- name: Deploy uWSGI
+  include: uwsgi.yml
 
-- name: Deploy htpasswd passwords to protect Nginx
-  htpasswd: "path=/etc/nginx/protected.htpasswd name={{ htpasswd_user }} password={{ htpasswd_password }} owner=root group=www-data mode=0640"
-  when: htpasswd_password is defined
-  become: yes
-  become_user: root
-
-- name: Deploy uWSGI config
-  become: yes
-  become_user: wsgi
-  template: "src={{ uwsgi_config_source }} dest={{ uwsgi_config_target }}"
-  tags: uwsgi
-
-- name: Deploy WSGI hander
-  become: yes
-  become_user: wsgi
-  template: "src=pyramid.wsgi dest={{ websauna_wsgi_file }}"
+- name: Deploy Nginx
+  include: nginx.yml
 
 - name: Deploy supervisor config
   become: yes
   become_user: root
   template: src={{ supervisor_config }} dest=/etc/supervisor/conf.d/site.conf
 
-- name: Deploy Nginx configuration
-  become: yes
-  become_user: root
-  template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
-  notify:
-    - nginx restart
 
 
 

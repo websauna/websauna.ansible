@@ -1,0 +1,28 @@
+- name: Install uWSGI
+  become: yes
+  become_user: wsgi
+# Ansible 2.2 pip install module is broken, force command line pip or you get a link errror
+  shell: "cd {{deploy_location}} && . venv/bin/activate && pip install uwsgi=={{ uwsgi_version }}"
+  tags: uwsgi
+  notify:
+    - Restart uWSGI
+
+# TODO: Wd used use nginx reload, but doesn't seem to work in Stouts.nginx, fails with upstart error, sudo problem?
+- name: Deploy uWSGI config
+  become: yes
+  become_user: wsgi
+  template: "src={{ uwsgi_config_source }} dest={{ uwsgi_config_target }}"
+  tags: uwsgi
+  notify:
+    - Restart uWSGI
+    - Reload Nginx
+
+# TODO: Wd used use nginx reload, but doesn't seem to work in Stouts.nginx, fails with upstart error, sudo problem?
+- name: Deploy WSGI hander
+  become: yes
+  become_user: wsgi
+  template: "src=pyramid.wsgi dest={{ websauna_wsgi_file }}"
+  tags: uwsgi
+  notify:
+    - Restart uWSGI
+    - Reload Nginx

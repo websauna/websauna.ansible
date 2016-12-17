@@ -37,3 +37,8 @@ smtp_password:
 # SMTP server port for outgoing email. Usually 587.
 smpt_port:
 
+# Fill this variable if ssl is on. Server-side path to a TLS certificate file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path:
+
+# Fill this variable if ssl is on. Server-side path to a TLS certificate key file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path_key:

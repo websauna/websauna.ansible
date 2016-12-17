@@ -2,7 +2,7 @@
 #
 # Requirements:
 #
-# ansible-galaxy install
+# ansible-galaxy install -r requirements-letsencrypt.yml
 #
 
 - hosts: letsencrypt-test
@@ -42,35 +42,37 @@
     - git_branch: master
     - site_mode: production
 
-    - ini_secrets_file: ../websauna/websauna/conf/test.ini
-
-    - server_name: myapp.websauna.org
+    - ini_secrets_file: ../myapp/myapp/conf/production-secrets.ini
 
     # Configured outbound domain for Postfix
     - server_email_domain: opensourcehacker.net
 
     # System outgoing email address (cron others)
-    - server_email: no-reply@opensourcehacke.net
+    - server_email: no-reply@opensourcehacker.net
 
     # Receive messages from Cron and system scripts to this address
-    - notify_email: mikko@opensourcehacke.net
+    - notify_email: mikko@opensourcehacker.net
 
     # Let's encrypt parameters
+    - server_name: example.com  # Your server fully qualified domain name
     - letsencrypt_webroot_path: /var/www/html
     - letsencrypt_email: mikko@opensourcehacker.net
     - letsencrypt_cert_domains:
-      - '{{ server_name }}'
+      - "{{ server_name }}"
+    # TODO: This command is verbose and sends out cron email even if certificates have not changed
     - letsencrypt_renewal_command_args: '--renew-hook "service nginx restart"'  # Ubuntu 14.04 nginx restart
+    - nginx_ssl_certificate_path: "/etc/letsencrypt/live/{{ server_name }}/cert.pem"
+    - nginx_ssl_certificate_path_key: "/etc/letsencrypt/live/{{ server_name }}/privkey.pem"
 
   pre_tasks:
 
     # Point to websauna.ansible/default.yml
     - include_vars: default.yml
-      tags: site, smtp
+      tags: site, smtp, psql, uwsgi, nginx
 
     # Point to your secrets file
     - include_vars: secrets.yml
-      tags: site, smtp
+      tags: site, smtp, sql
 
   roles:
   - { role: websauna.preflight, tags: ['site'] }

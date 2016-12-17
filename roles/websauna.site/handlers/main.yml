@@ -20,3 +20,8 @@
   become_user: root
   service: name=nginx state=restarted
 
+# Override broken Stouts.nginx handler, as it doesn't run as root
+- name: Reload Nginx
+  become: yes
+  become_user: root
+  service: name=nginx state=reloaded

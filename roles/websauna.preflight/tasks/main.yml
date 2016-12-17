@@ -11,9 +11,6 @@
   when: deploy_location is not defined
   tags: site-update
 
-- name: test
-  debug: var=ansible_env
-
 - name: Fail if SSH agent forward is not in use
   fail:
    msg: The Ansible server connection did not have SSH agent forwarding enabled.

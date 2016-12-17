@@ -1,5 +1,25 @@
 config_description: These are default Ansible variables consumed by various templates in Websauna deployment. They are generated based on core information you give it. You can override any of these variables by including another variable file after default.yml in your playbook using``include_vars`` Ansible command after ``default.yml`` is included in your playbook.
 
+# List of native dependencies needed to install and run Websauna
+dependencies:
+    - git
+    - supervisor
+    - build-essential
+    - libfreetype6-dev
+    - libncurses5-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - libjpeg-dev
+    - libpng12-dev
+    - fail2ban
+    - gettext
+    - duplicity
+    - python-boto
+    - python-virtualenv
+    - libpq-dev
+    - libffi-dev
+    - libzmq3-dev
+    - ntp
 
 # What is the name of the unix user owning /srv/pyramid/myapp files
 # DO NOT CHANGE - the current version of Ansible does not allow variables in become_user
@@ -81,7 +101,7 @@ postfix_notify_email: "{{ notify_email }}"
 # ----------------------------------------------------
 
 # uWSGI version to install
-uwsgi_version: 2.0.12
+uwsgi_version: 2.0.14
 
 # Template used for uWSGI config
 uwsgi_config_source: uwsgi.ini
@@ -93,17 +113,11 @@ uwsgi_config_target: "{{ websauna_conf_folder }}/uwsgi.ini"
 # nginx
 # ----------------------------------------------------
 
-# A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
+# A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file. Leave empty if using Let's Encrypt.
 local_certificate_file:
 
-# A certificate file key on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
+# A certificate file key on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file. Leave empty if using Let's Encrypt.
 local_key_file:
-
-# Server-side path to a TLS certificate file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
-nginx_ssl_certificate_path: /etc/nginx/certificate.pem
-
-# Server-side path to a TLS certificate key file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
-nginx_ssl_certificate_path_key: /etc/nginx/key.pem
 
 # ----------------------------------------------------
 # PostgreSQL
@@ -151,32 +165,6 @@ nginx_access_log: /var/log/nginx/{{ site_id }}.access.log
 
 # Where does Nginx error log file goes
 nginx_error_log: /var/log/nginx/{{ site_id }}.error.log
-
-# ----------------------------------------------------
-# New relic
-# ----------------------------------------------------
-
-# ----------------------------------------------------
-# Log watch
-# ----------------------------------------------------
-
-# Email Address which Logwatch reports to
-logwatch_email: "{{ notify_email }}"
-
-# The level of detail in the Logwatch report
-logwatch_detail: "low"
-
-# The default time range for the Logwatch report
-logwatch_range: "yesterday"
-
-# The output method of the Logwatch report
-logwatch_output: "stdout"
-
-# The format of the Logwatch report
-logwatch_format: "text"
-
-# Cron special time specification nickname - must match with logwatch range!
-logwatch_cron_time: "daily"
 
 # ----------------------------------------------------
 # IPython Notebook

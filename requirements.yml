@@ -1,20 +1,19 @@
-# Ansible playbook requirements
-
 #
-# from github
+# Websauna playbook requirements
 #
 
-# Show stopper bug https://github.com/ANXS/postgresql/pull/164
-# not being merged as the writing of this, use a patched fork on Github
-#- src: https://github.com/teralytics/ansible-postgresql
-- src: git+https://github.com/websauna/ANXS.postgresql.git
+#
+# from Github
+#
+
+- src: git+https://github.com/ANXS/postgresql.git
   name: ANXS.postgresql
+  version: 4b50832e0082c6b6b6cb5fb040231553dfc7948d  # Galaxy released version did not contain necessary fixes, pin down to certain Github commit
 
 #
 # from galaxy.ansible.com
 #
 
-- src: ANXS.logwatch
 - src: Stouts.nginx
 - src: Stouts.redis
 - src: Stouts.python
