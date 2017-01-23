@@ -119,6 +119,16 @@ local_certificate_file:
 # A certificate file key on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file. Leave empty if using Let's Encrypt.
 local_key_file:
 
+# Source template name for Nginx configuration
+nginx_config: nginx.conf
+
+# Where does Nginx access log file goes
+nginx_access_log: /var/log/nginx/{{ site_id }}.access.log
+
+# Where does Nginx error log file goes
+nginx_error_log: /var/log/nginx/{{ site_id }}.error.log
+
+
 # ----------------------------------------------------
 # PostgreSQL
 # ----------------------------------------------------
@@ -160,11 +170,6 @@ postgresql_user_privileges:
     priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
     role_attr_flags: "CREATEDB" # role attribute flags
 
-# Where does Nginx access log file goes
-nginx_access_log: /var/log/nginx/{{ site_id }}.access.log
-
-# Where does Nginx error log file goes
-nginx_error_log: /var/log/nginx/{{ site_id }}.error.log
 
 # ----------------------------------------------------
 # IPython Notebook
