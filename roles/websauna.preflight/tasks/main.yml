@@ -18,9 +18,10 @@
   tags: site-update
 
 - name: Fail if site mode is not set or is something we don't feel confident about
-  fail: msg="The Ansible server connection did not have SSH agent forwarding enabled or you have become_user\:root in your playbook which you should not have"
+  fail:
+    msg: "Could not read Ansible site_mode variable. It usually means that you have not configured required variables for this playbook, or you are including YAML variable files in wrong order."
   when: "site_mode not in ['production', 'staging']"
-  tags: site-update
+  tags: ["site-update", "site"]
   become: no
 
 # TODO: For some reason the following gives unknown SSH error on Vagrant
