@@ -2,18 +2,7 @@
 # Websauna playbook requirements
 #
 
-#
-# from Github
-#
-
-- src: git+https://github.com/ANXS/postgresql.git
-  name: ANXS.postgresql
-  version: 4b50832e0082c6b6b6cb5fb040231553dfc7948d  # Galaxy released version did not contain necessary fixes, pin down to certain Github commit
-
-#
-# from galaxy.ansible.com
-#
-
+- src: ANXS.postgresql
 - src: Stouts.nginx
 - src: Stouts.redis
 - src: Stouts.python
