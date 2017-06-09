@@ -139,6 +139,7 @@
 
 - name: Deploy Nginx
   include: nginx.yml
+  tags: nginx
 
 - name: Deploy supervisor config
   become: yes

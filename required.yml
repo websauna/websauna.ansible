@@ -55,6 +55,3 @@ site_mode:
 
 # A local path to a file where ``production-secrets.ini`` file is. This file contains API tokens like Facebook API keys, session randomization seeds and such. Example: ``../myapp/conf/production-secrets.ini``
 ini_secrets_file:
-
-# Do we enable / disable internal Linux firewall
-firewall:
