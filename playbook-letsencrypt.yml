@@ -8,7 +8,8 @@
 - hosts: letsencrypt-test
   gather_facts: true
   vars:
-    - package_name: myapp
+    - package_name: my.app
+    - package_path: my/app
     - site_id: myapp
 
     # Do we create Let's Encrypt HTTPS certificate for the site

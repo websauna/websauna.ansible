@@ -5,7 +5,7 @@ Deploy Websauna website with Ansible.
 Introduction
 ============
 
-`See more documentation here <https://websauna.org/narrative/deployment/index.html>`_.
+`See more documentation here <https://websauna.org/docs/narrative/deployment/index.html>`_.
 
 This is an Ansible playbook for automatically deploying a single server Websauna website from a git repository for Ubuntu 14.04 Linux. It allows you to do deploy your Websauna application to a fresh server, where you just received SSH credentials, within 30 minutes. Alternatively you can gracefully upgrade any existing running site.
 
@@ -21,7 +21,7 @@ Automatic installation sets up
 
 * Email out via upstream SMTP server and locally configured Postfix
 
-* Supervisot startup scripts
+* Supervisor startup scripts
 
 Furthermore
 
@@ -31,11 +31,11 @@ Furthermore
 
 * Firewall is set up to allow only inbound SSH, HTTP, HTTPS
 
-* The application is deployed in the folder ``/srv/pyramid/yoursitename`` per Filesystem Hierarchy Standard
+* The application is deployed in the folder ``/srv/pyramid/yourapplicationpackage`` per Filesystem Hierarchy Standard
 
 * Safely run migrations: Run database migrations first and then update codebase with compatible model files to avoid breaking an existing running site
 
-`See documentation <https://websauna.org/narrative/deployment/index.html>`_.
+`See documentation <https://websauna.org/docs/narrative/deployment/index.html>`_.
 
 production.ini
 --------------
