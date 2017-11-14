@@ -8,10 +8,6 @@ print("Starting WSGI, Python is {}, sys.path is {}".format(sys.version, sys.path
 from pkg_resources import load_entry_point
 load_entry_point("websauna", "paste.app_factory", "main")
 
-# Poke deep into pyramid.paster to supply our own configincluder
-from websauna.utils.configincluder import monkey_patch_paster_config_parser
-monkey_patch_paster_config_parser()
-
 from pyramid.paster import get_app
 from websauna.system.devop.cmdline import setup_logging
 
