@@ -34,7 +34,7 @@ wsgi_group: wsgi
 deploy_location: "/srv/pyramid/{{ package_name }}"
 
 # Deploy production.ini and production-secrets.ini here
-websauna_conf_folder: "{{ deploy_location }}/{{ package_name }}/conf"
+websauna_conf_folder: "{{ deploy_location }}/{{ package_path }}/conf"
 
 # The server path where we generate INI file for Pyramid. Ansible will fill in details like database.
 websauna_config_file: "{{ websauna_conf_folder }}/generated.ini"

@@ -12,12 +12,12 @@ Service statuses::
 Enter Python shell:
 
     sudo -i -u wsgi
-    ws-shell conf/production.ini
+    ws-shell ws://{{ deploy_location }}/{{ package_path }}/conf/production.ini
 
 Enter database shell:
 
     sudo -i -u wsgi
-    ws-db-shell conf/production.ini
+    ws-db-shell ws://{{ deploy_location }}/{{ package_path }}/conf/production.ini
 
 Restart web front end and application servers:
 
